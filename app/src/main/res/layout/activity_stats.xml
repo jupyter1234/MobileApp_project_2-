@@ -10,8 +10,8 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Stats_Activity"
-        android:textSize="60sp"
+        android:text="@string/stat_title"
+        android:textSize="40sp"
         android:textStyle="bold"
         android:layout_marginBottom="30dp"/>
     <LinearLayout
@@ -22,7 +22,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/weekly_stat"
+            android:text="@string/mood_score_title"
             android:textSize="40sp"
             android:textStyle="bold"/>
         <TextView
@@ -31,12 +31,10 @@
             android:layout_height="wrap_content"
             android:text="1"
             android:textSize="25sp"/>
-        <!--
-        <ImageView                  !!!!Graph!!!!
-            android:id="@+id/weekly_graph"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
-            -->
+        <com.github.mikephil.charting.charts.HorizontalBarChart
+            android:id="@+id/chart"
+            android:layout_width="match_parent"
+            android:layout_height="100dp" />
     </LinearLayout>
 
     <TextView

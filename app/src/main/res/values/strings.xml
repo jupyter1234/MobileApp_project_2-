@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">gieok_moa</string>
-    <string name="weekly_stat">주간 통계</string>
-    <string name="monthly_stat">월간 통계</string>
+    <string name="stat_title">오늘 하루는 어땠나요?</string>
+    <string name="mood_score_title">색상 통계</string>
+    <string name="monthly_stat">태그 통계</string>
     <string name="most_freq_tag">가장 자주쓴 태그</string>
 </resources>
