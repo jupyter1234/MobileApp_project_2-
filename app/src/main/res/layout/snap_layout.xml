@@ -1,31 +1,43 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:layout_width="300dp"
+    android:layout_height="400dp"
+    android:orientation="vertical"
+    android:background="@drawable/dialog_background">
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/snap_image"/>
-    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="오늘도 억까가 시작됐다..."
-        android:layout_gravity="center"/>
+        android:layout_gravity="center"
+        android:id="@+id/snapimage"
+        android:src="@drawable/snap_image" />
+    <TextView
+        android:layout_marginTop="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/detail"
+        android:layout_marginLeft="19dp"
+        android:layout_alignBottom="@id/snapimage"
+        android:textSize="18dp"
+        android:fontFamily="@font/myfont"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal"
-        android:gravity="right
-">
+        android:gravity="right|bottom"
+        android:orientation="horizontal">
+
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/settingbutton"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_margin="10dp"
             android:src="@drawable/settingbutton"/>
 
         <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:id="@+id/trashbutton"
+            android:layout_width="23dp"
+            android:layout_height="23dp"
+            android:layout_margin="10dp"
             android:src="@drawable/trashbutton" />
     </LinearLayout>
 
