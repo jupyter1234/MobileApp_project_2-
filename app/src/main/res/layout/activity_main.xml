@@ -1,37 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- Auto layout, variables, and unit scale are not yet supported -->
-<RelativeLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/mainpage_po"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:clipToOutline="true"
-    android:background="#FBFBFB">
+    android:background="@color/backgroundColor">
 
-    <GridLayout
+    <!-- Auto layout, variables, and unit scale are not yet supported -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/viewPager"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
-
-    <!-- Auto layout, variables, and unit scale are not yet supported -->
-    <View
-        android:id="@+id/snap_add_bu"
-        android:layout_width="156dp"
-        android:layout_height="156dp"
-        android:layout_alignParentLeft="true"
-        android:layout_marginLeft="16dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="200dp"
-        />
-
-    <!-- Auto layout, variables, and unit scale are not yet supported -->
-    <View
-        android:id="@+id/bottombar"
-        android:layout_width="47dp"
-        android:layout_height="7dp"
-        android:layout_centerHorizontal="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="754dp"
-        />
+        android:layout_height="match_parent">
+    </androidx.viewpager2.widget.ViewPager2>
 
 
-</RelativeLayout>
+</LinearLayout>
