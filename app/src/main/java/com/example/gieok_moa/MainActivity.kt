@@ -23,7 +23,6 @@ class MainActivity : AppCompatActivity() {
         val dialog = Dialog(this)
         dialog.setContentView(snapdialogBinding.root)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-        //dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         // Dialog의 크기를 조절합니다. 여기서는 폭과 높이를 설정합니다.
         val width = resources.getDimensionPixelSize(R.dimen.dialog_width) // 원하는 폭의 크기를 설정하세요
         val height = resources.getDimensionPixelSize(R.dimen.dialog_height) // 원하는 높이의 크기를 설정하세요
@@ -31,7 +30,7 @@ class MainActivity : AppCompatActivity() {
 
         val setting=snapdialogBinding.root.findViewById<ImageView>(R.id.settingbutton)
         setting.setOnClickListener{
-            //snap추가 창
+            //snap수정 창으로 이동
             dialog.dismiss()
         }
         val trash=snapdialogBinding.root.findViewById<ImageView>(R.id.trashbutton)
@@ -39,10 +38,8 @@ class MainActivity : AppCompatActivity() {
             //삭제
             dialog.dismiss()
         }
-        dialog.show()
 
-        val window=dialog.window
-       window?.decorView?.setPadding(0, 0, 0, 0)
+        dialog.show()
 
 
     }
