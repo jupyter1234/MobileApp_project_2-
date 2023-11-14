@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">gieok_moa</string>
+    <string name="some_id">지금 어떤 기분이신가요?</string>
+    <string name="detail">간단한 한 마디</string>
 </resources>
