@@ -12,19 +12,6 @@ import com.example.gieok_moa.databinding.FragmentMainBinding
 import com.example.gieok_moa.databinding.ItemSnapBinding
 import java.util.Date
 import java.text.SimpleDateFormat
-
-class MyViewHolder(val binding: ItemSnapBinding) : RecyclerView.ViewHolder(binding.root)
-class MyAdapter(val datas: MutableList<Snap>): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
-        MyViewHolder(ItemSnapBinding.inflate(LayoutInflater.from(parent.context), parent, false))
-    override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        val binding=(holder as MyViewHolder).binding
-        binding.snapTime.text= datas[position].time
-        binding.snapImage.setImageResource(datas[position].image)
-    }
-
-    override fun getItemCount(): Int = datas.size
-}
 class MainFragment : Fragment() {
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,24 +33,29 @@ class MainFragment : Fragment() {
 
         val datas: MutableList<Snap> = mutableListOf()
         val snapAddButton: Snap = Snap("", R.drawable.snap_add_button, 0)
-        val snapEx = Snap("23:22", R.drawable.snap_image, 1)
+        val snapEx = Snap("23:22", R.drawable.snap_image1, 1)
+        datas.add(snapEx)
         datas.add(snapAddButton)
-//        datas.add(snapEx)
-//        datas.add(snapEx)
-//        datas.add(snapEx)
-//        datas.add(snapEx)
-//        datas.add(snapEx)
 
+//        datas.add(snapEx)
+//        datas.add(snapEx)
+//        datas.add(snapEx)
+//        datas.add(snapEx)
 
         val layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.layoutManager = layoutManager
-        val adapter = MyAdapter(datas)
+        val adapter = MyAdapter(datas){ snap ->
+            //Log.d("check", "snap clicked")
+            if (snap.image == R.drawable.snap_add_button){
+                // when snap add button clicked -> popup & move to snap add page
+
+            }
+            else{
+                // when snap clicked -> dialog
+                
+            }
+        }
         binding.recyclerView.adapter = adapter
-
-        // when snap add button clicked
-
-
-        // when snap clicked
 
         return binding.root
     }

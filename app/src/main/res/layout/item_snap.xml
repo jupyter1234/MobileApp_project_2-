@@ -4,7 +4,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:gravity="center"
+    android:layout_gravity="center_horizontal"
     android:layout_marginBottom="20dp">
 
     <LinearLayout
@@ -17,7 +17,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:text="13:42"
-            android:textSize="20dp"
+            android:textSize="25dp"
             android:fontFamily="@font/po"
             android:padding="3dp"/>
         <ImageView
