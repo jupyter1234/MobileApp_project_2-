@@ -23,6 +23,13 @@
         android:id="@+id/viewStatsButton"
         android:textSize="30sp"
         android:textStyle="bold"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ViewDailyStats"
+        android:id="@+id/viewDailyStatsButton"
+        android:textSize="30sp"
+        android:textStyle="bold"/>
 
 
 </LinearLayout>

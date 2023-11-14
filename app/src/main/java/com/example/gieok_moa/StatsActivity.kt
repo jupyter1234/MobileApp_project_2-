@@ -13,6 +13,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import java.util.Calendar
 
 
 class StatsActivity : AppCompatActivity() {
@@ -23,11 +24,11 @@ class StatsActivity : AppCompatActivity() {
 
         val db = openOrCreateDatabase("testdb", Context.MODE_PRIVATE, null)
 
-        getTempTable(db)//make temp db table
-        val since = 1
-        val till = 5
-        val moodScoreList = getScoreList(db,since,till)//time_created 1~5까지의 snap들에서 moodscore가 각각 1,2,3 점일 때를 가진 List<Int> 반환
-        val avrg = (moodScoreList[0]*1 + moodScoreList[1]*2 + moodScoreList[2]*3).toDouble() / (till-since +1)
+        createTables(db)//make temp db table
+        Snap.generateRandomSnap(db,10)
+        Tag.generateTempTags(db,10)
+        val moodScoreList = getScoreList(db)//tag가 각각 1,2,3 점일 때를 가진 List<Int> 반환
+        val avrg = (moodScoreList[0]*100 + moodScoreList[1]*50 + moodScoreList[2]*0).toDouble()/(moodScoreList[0]+moodScoreList[1]+moodScoreList[2])
         binding.averageMoodScore.setText("Mood Score : $avrg")
 
         val mood_chart = binding.chart
@@ -37,81 +38,53 @@ class StatsActivity : AppCompatActivity() {
 
 
         //가장 많이 쓴 Tags가져오기
-        val topTags = getTopTags(db,3,since,till)//time_created 1~5까지의 snap들에서 가장 많이 쓴 tags를 count만큼 가져옴
+        val topTags = getTopTags(db,3)//time_created 1~5까지의 snap들에서 가장 많이 쓴 tags를 count만큼 가져옴
 
         binding.freq1stTag.setText("1st : ${topTags[0].key} (${topTags[0].value} times)")
         binding.freq2ndTag.setText("2nd : ${topTags[1].key} (${topTags[1].value} times)")
         binding.freq3rdTag.setText("3nd : ${topTags[2].key} (${topTags[2].value} times)")
 
-
-
     }
 
-    fun getTempTable(db: SQLiteDatabase) {
-        db.execSQL("DROP TABLE IF EXISTS snap")//나중에는 CREATE IF NOT EXISTS
-        db.execSQL(
-            "CREATE TABLE snap (" +
-                    "time_created INTEGER," +
-                    "image_address TEXT," +
-                    "description TEXT," +
-                    "mood_score INTEGER," +
-                    "tags TEXT," +
-                    "primary key(time_created))"
-        )
-        db.execSQL(
-            "INSERT INTO snap (time_created, image_address, description, mood_score, tags) values (1, ?, ?, 1, ?)",
-            arrayOf<String>("i1", "d1", "t1")
-        )
-        db.execSQL(
-            "INSERT INTO snap (time_created, image_address, description, mood_score, tags) values (2, ?, ?, 2, ?)",
-            arrayOf<String>("i2", "d2", "t2,t1")
-        )
-        db.execSQL(
-            "INSERT INTO snap (time_created, image_address, description, mood_score, tags) values (3, ?, ?, 3, ?)",
-            arrayOf<String>("i3", "d3", "t3,t2,t1")
-        )
-        db.execSQL(
-            "INSERT INTO snap (time_created, image_address, description, mood_score, tags) values (4, ?, ?, 2, ?)",
-            arrayOf<String>("i4", "d4", "t4,t3,t2,t1")
-        )
-        db.execSQL(
-            "INSERT INTO snap (time_created, image_address, description, mood_score, tags) values (5, ?, ?, 1, ?)",
-            arrayOf<String>("i5", "d5", "t1,t3,t5")
-        )
-
+    fun createTables(db: SQLiteDatabase) {
+        Snap.generateSnapTable(db)
+        Snap.generateTagTable(db)
     }
 
-    fun getScoreList(db: SQLiteDatabase, since: Int, till: Int):List<Int> {
-        val cursor = db.rawQuery("select mood_score, count(*) from snap where time_created between $since and $till group by mood_score order by mood_score", null)
-        val moodScoreArray = mutableListOf<Int>(0,0,0)
-        for(i in 0..2){
-            cursor.moveToNext()
-            moodScoreArray.set(i, cursor.getInt(1))
+    fun getScoreList(db: SQLiteDatabase):List<Int> {
+        val tagList = Tag.load(db)
+        val colorList = mutableListOf<Int>(0,0,0)
+        for(i in tagList){
+            when(i.color){
+                0->colorList[0]+=1
+                1->colorList[1]+=1
+                2->colorList[2]+=1
+                else-> null
+            }
         }
-        cursor.close()
-        return moodScoreArray
+        return colorList
     }
 
-    fun getTopTags(db: SQLiteDatabase, count: Int, since: Int, till: Int):List<MutableMap.MutableEntry<String,Int>> {
+    fun getTopTags(db: SQLiteDatabase, count: Int):List<MutableMap.MutableEntry<String,Int>> {
 
-        //tags가 count보다 적을 때 예외처리 해야 함
-        val cursor = db.rawQuery("select tags from snap where time_created between $since and $till", null)
+
+        val tagList = Tag.load(db)
 
         val tagCountMap: MutableMap<String, Int> = HashMap()
 
-        while (cursor.moveToNext()) {
-            val splitStr = cursor.getString(0).split(",")
-            for (i in splitStr.indices) {
-                if (tagCountMap.containsKey(splitStr[i])) {
-                    tagCountMap[splitStr[i]] = tagCountMap[splitStr[i]]!! + 1
+        for (i in tagList) {
+                if (tagCountMap.containsKey(i.state)) {
+                    tagCountMap[i.state] = tagCountMap[i.state]!! + 1
                 } else {
-                    tagCountMap[splitStr[i]] = 1
+                    tagCountMap[i.state] = 1
                 }
-            }
         }
-        cursor.close()
-
-        val result = tagCountMap.entries.sortedByDescending { it.value }.take(count)
+        val result: List<MutableMap.MutableEntry<String, Int>>
+        if(tagCountMap.size<count) {
+            result = tagCountMap.entries.sortedByDescending { it.value }.take(count)
+        } else {
+            result = tagCountMap.entries.sortedByDescending { it.value }
+        }
         return result
     }
 
@@ -192,12 +165,56 @@ class StatsActivity : AppCompatActivity() {
         data.setValueTextSize(15f)
 
         return data
-
-
     }
 
-    private fun prepareChartData(barChart: HorizontalBarChart, data: BarData) {
+    fun prepareChartData(barChart: HorizontalBarChart, data: BarData) {
         barChart.setData(data) // BarData 전달
         barChart.invalidate() // BarChart 갱신해 데이터 표시
+    }
+
+    fun getTagsOfDay(db: SQLiteDatabase, date: Calendar):Int?{
+
+// Set the start of the day (time = 00:00:00)
+        date.set(Calendar.HOUR_OF_DAY, 0)
+        date.set(Calendar.MINUTE, 0)
+        date.set(Calendar.SECOND, 0)
+        date.set(Calendar.MILLISECOND, 0)
+
+// Get the start of the day in milliseconds
+        val startOfDayInMillis = date.timeInMillis
+
+// Set the end of the day (time = 23:59:59.999)
+        date.set(Calendar.HOUR_OF_DAY, 23)
+        date.set(Calendar.MINUTE, 59)
+        date.set(Calendar.SECOND, 59)
+        date.set(Calendar.MILLISECOND, 999)
+
+// Get the end of the day in milliseconds
+        val endOfDayInMillis = date.timeInMillis
+
+        val cursor = db.rawQuery("select * from snap where created_time between $startOfDayInMillis and $endOfDayInMillis", null)
+        val snap_ids = mutableListOf<Long>()
+        while(cursor.moveToNext()){
+            snap_ids.add(cursor.getLong(0))
+        }
+        if(snap_ids.size==0){
+            return null
+        }
+        cursor.close()
+        val colors = mutableListOf<Long>()
+        for(i in snap_ids) {
+            val cursor2 = db.rawQuery("select color from tags where snap_id = $i", null)
+            colors.add(cursor2.getLong(0))
+            cursor2.close()
+        }
+        var result = 0
+        if(colors.average()>1.333){
+            result = 2
+        } else if(colors.average()>0.666){
+            result = 1
+        } else {
+            result = 0
+        }
+        return result
     }
 }
