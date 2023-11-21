@@ -1,7 +1,5 @@
 package com.example.gieok_moa
 
-import android.content.Context
-import android.database.sqlite.SQLiteDatabase
 import android.graphics.Color
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
@@ -13,7 +11,7 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import java.util.Calendar
+import java.util.Date
 
 
 class StatsActivity : AppCompatActivity() {
@@ -22,14 +20,13 @@ class StatsActivity : AppCompatActivity() {
         val binding = ActivityStatsBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val db = openOrCreateDatabase("testdb", Context.MODE_PRIVATE, null)
+        val db = UserDatabase.getInstance(applicationContext)
 
-        createTables(db)//make temp db table
-        Snap.generateRandomSnap(db,10)
-        Tag.generateTempTags(db,10)
+        deleteTemp(db)
+        generateRandomSnap(db,10)
+        generateTempTags(db,10)
+
         val moodScoreList = getScoreList(db)//tag가 각각 1,2,3 점일 때를 가진 List<Int> 반환
-        val avrg = (moodScoreList[0]*100 + moodScoreList[1]*50 + moodScoreList[2]*0).toDouble()/(moodScoreList[0]+moodScoreList[1]+moodScoreList[2])
-        binding.averageMoodScore.setText("Mood Score : $avrg")
 
         val mood_chart = binding.chart
 
@@ -46,37 +43,31 @@ class StatsActivity : AppCompatActivity() {
 
     }
 
-    fun createTables(db: SQLiteDatabase) {
-        Snap.generateSnapTable(db)
-        Snap.generateTagTable(db)
-    }
-
-    fun getScoreList(db: SQLiteDatabase):List<Int> {
-        val tagList = Tag.load(db)
+    fun getScoreList(db: UserDatabase?):List<Int> {
+        val tag2List = db!!.tagDao().getAll()
         val colorList = mutableListOf<Int>(0,0,0)
-        for(i in tagList){
+        for(i in tag2List){
             when(i.color){
-                0->colorList[0]+=1
-                1->colorList[1]+=1
-                2->colorList[2]+=1
-                else-> null
+                com.example.gieok_moa.Color.RED->colorList[0]+=1
+                com.example.gieok_moa.Color.YELLOW->colorList[1]+=1
+                com.example.gieok_moa.Color.GREEN->colorList[2]+=1
             }
         }
         return colorList
     }
 
-    fun getTopTags(db: SQLiteDatabase, count: Int):List<MutableMap.MutableEntry<String,Int>> {
+    fun getTopTags(db: UserDatabase?, count: Int):List<MutableMap.MutableEntry<String,Int>> {
 
 
-        val tagList = Tag.load(db)
+        val tag2List = db!!.tagDao().getAll()
 
         val tagCountMap: MutableMap<String, Int> = HashMap()
 
-        for (i in tagList) {
-                if (tagCountMap.containsKey(i.state)) {
-                    tagCountMap[i.state] = tagCountMap[i.state]!! + 1
+        for (i in tag2List) {
+                if (tagCountMap.containsKey(i.staus)) {
+                    tagCountMap[i.staus] = tagCountMap[i.staus]!! + 1
                 } else {
-                    tagCountMap[i.state] = 1
+                    tagCountMap[i.staus] = 1
                 }
         }
         val result: List<MutableMap.MutableEntry<String, Int>>
@@ -155,7 +146,7 @@ class StatsActivity : AppCompatActivity() {
             Color.rgb(0, 255, 0), Color.rgb(255, 255, 0), Color.rgb(255, 0, 0))
         set2.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
-                return value.toInt().toString() + "회"
+                return value.toInt().toString()
             }
         }
 
@@ -171,7 +162,7 @@ class StatsActivity : AppCompatActivity() {
         barChart.setData(data) // BarData 전달
         barChart.invalidate() // BarChart 갱신해 데이터 표시
     }
-
+/*
     fun getTagsOfDay(db: SQLiteDatabase, date: Calendar):Int?{
 
 // Set the start of the day (time = 00:00:00)
@@ -216,5 +207,35 @@ class StatsActivity : AppCompatActivity() {
             result = 0
         }
         return result
+    }
+
+ */
+
+    fun generateRandomSnap(db: UserDatabase?, count:Int) {
+        for(i in 1..count) {
+            val t = Snap(i.toLong(), Date(), "", "")
+            db!!.snapDao().insertAll(t)
+        }
+    }
+
+    fun generateTempTags(db: UserDatabase?, count:Int){
+        for(i in 1..count){
+            val state0 = when((1..4).random()){
+                1->"t1"
+                2->"t2"
+                3->"t3"
+                4->"t4"
+                else->"t0"
+            }
+            db!!.tagDao().insertAll(Tag(i.toLong(), state0, com.example.gieok_moa.Color.RED, i.toLong()))
+        }
+    }
+
+    fun deleteTemp(db: UserDatabase?){
+        for(i in db!!.snapDao().getAll())
+            db.snapDao().delete(i)
+        for(i in db.tagDao().getAll())
+            db.tagDao().delete(i)
+
     }
 }
