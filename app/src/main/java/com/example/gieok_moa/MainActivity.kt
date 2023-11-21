@@ -1,23 +1,28 @@
 package com.example.gieok_moa
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gieok_moa.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
+    class MainFragmentPagerAdapter(activity: FragmentActivity) :
+        FragmentStateAdapter(activity) {
+        val fragments: List<Fragment>
+        init {
+            fragments = listOf(MainFragment(),Stat1Fragment(),Stat2Fragment())
+        }
+        override fun getItemCount(): Int = fragments.size
+        override fun createFragment(position: Int): Fragment = fragments[position]
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        binding.viewStatsButton.setOnClickListener {
-            val intent = Intent(this, StatsActivity::class.java)
-            startActivity(intent)
-        }
-        binding.viewDailyStatsButton.setOnClickListener {
-            val intent = Intent(this, DailyStatActivity::class.java)
-            startActivity(intent)
-        }
+        val adapter = MainFragmentPagerAdapter(this)
+        binding.viewPager.adapter = adapter
     }
 }
