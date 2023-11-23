@@ -13,7 +13,7 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding=ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+/*
         binding.addimage.setOnClickListener {
             // 갤러리에서 이미지를 선택하는 인텐트를 생성
             val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
@@ -26,9 +26,9 @@ class MainActivity : AppCompatActivity() {
         }
         binding.completeButton.setOnClickListener {
             //database에 저장후 mainpage로 돌아감
-        }
+        }*/
     }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+    /*override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
         if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
@@ -38,5 +38,5 @@ class MainActivity : AppCompatActivity() {
             // URI를 이용하여 이미지를 설정
             binding.addimage.setImageURI(imageUri)
         }
-    }
+    }*/
 }
