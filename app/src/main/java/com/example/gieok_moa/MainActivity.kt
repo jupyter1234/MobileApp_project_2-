@@ -12,7 +12,8 @@ class MainActivity : AppCompatActivity() {
         FragmentStateAdapter(activity) {
         val fragments: List<Fragment>
         init {
-            fragments = listOf(MainFragment(),Stat1Fragment(),Stat2Fragment())
+            fragments = listOf(Stat2Fragment())
+            //fragments = listOf(MainFragment(),Stat1Fragment(),Stat2Fragment())
         }
         override fun getItemCount(): Int = fragments.size
         override fun createFragment(position: Int): Fragment = fragments[position]

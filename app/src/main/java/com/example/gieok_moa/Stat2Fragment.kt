@@ -1,10 +1,10 @@
 package com.example.gieok_moa
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.example.gieok_moa.databinding.FragmentStat2Binding
 import com.github.mikephil.charting.charts.HorizontalBarChart
 import com.github.mikephil.charting.components.XAxis
@@ -14,6 +14,7 @@ import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
 import java.util.Date
+
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,11 +60,13 @@ class Stat2Fragment : Fragment() {
 
         //가장 많이 쓴 Tags가져오기
         val topTags = getTopTags(db,3)//time_created 1~5까지의 snap들에서 가장 많이 쓴 tags를 count만큼 가져옴
+        if(topTags.size>=1)
+            binding.freq1stTag.setText("1st : ${topTags[0].key} (${topTags[0].value})")
+        if(topTags.size>=2)
+            binding.freq2ndTag.setText("2nd : ${topTags[1].key} (${topTags[1].value})")
+        if(topTags.size>=3)
+            binding.freq3rdTag.setText("3nd : ${topTags[2].key} (${topTags[2].value})")
 
-        binding.freq1stTag.setText("1st : ${topTags[0].key} (${topTags[0].value} times)")
-        binding.freq2ndTag.setText("2nd : ${topTags[1].key} (${topTags[1].value} times)")
-        binding.freq3rdTag.setText("3nd : ${topTags[2].key} (${topTags[2].value} times)")
-        // Inflate the layout for this fragment
         return binding.root
     }
 
@@ -102,15 +105,17 @@ class Stat2Fragment : Fragment() {
                 4->"t4"
                 else->"t0"
             }
-            db!!.tagDao().insertAll(Tag(i.toLong(), state0, com.example.gieok_moa.Color.RED, i.toLong()))
+            db!!.tagDao().insertAll(Tag(i.toLong(), state0, arrayOf(Color.RED,Color.YELLOW,Color.GREEN).random(), i.toLong()))
         }
     }
 
     fun deleteTemp(db: UserDatabase?){
-        for(i in db!!.snapDao().getAll())
+        for(i in db!!.snapDao().getAll()) {
             db.snapDao().delete(i)
-        for(i in db.tagDao().getAll())
+        }
+        for(i in db.tagDao().getAll()) {
             db.tagDao().delete(i)
+        }
 
     }
     fun getScoreList(db: UserDatabase?):List<Int> {
@@ -154,11 +159,12 @@ class Stat2Fragment : Fragment() {
         barChart.getDescription().setEnabled(false) // chart 밑에 description 표시 유무
         barChart.setTouchEnabled(false) // 터치 유무
         barChart.getLegend().setEnabled(false) // Legend는 차트의 범례
-        barChart.setExtraOffsets(0f, 0f, 5f, 0f)
+        barChart.setExtraOffsets(0f, 0f, 0f, 0f)
 
         // XAxis (수평 막대 기준 왼쪽) - 선 유무, 사이즈, 색상, 축 위치 설정
         val xAxis: XAxis = barChart.getXAxis()
         xAxis.setDrawAxisLine(false)
+        xAxis.setDrawLabels(false)
         xAxis.granularity = 1f
         xAxis.textSize = 15f
         xAxis.gridLineWidth = 25f
@@ -181,8 +187,7 @@ class Stat2Fragment : Fragment() {
         axisRight.setDrawLabels(false) // label 삭제
         axisRight.setDrawGridLines(false)
         axisRight.setDrawAxisLine(false)
-
-        // XAxis에 원하는 String 설정하기 (앱 이름)
+        /*// XAxis에 원하는 String 설정하기 (앱 이름)
         xAxis.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 return when(value){
@@ -194,26 +199,23 @@ class Stat2Fragment : Fragment() {
 
             }
         }
+         */
     }
 
     fun createChartData(inputData:List<Int>): BarData {
 
         // 1. [BarEntry] BarChart에 표시될 데이터 값 생성
         val values = ArrayList<BarEntry>()
-        var t = 0.0f
-        for (i in inputData) {
-            val x = t
-            t += 1.0f
-            val y = i.toFloat()
-            values.add(BarEntry(x, y))
-        }
+        values.add(BarEntry(0f, inputData[0].toFloat(), R.drawable.red_blur))//icon 안먹힘
+        values.add(BarEntry(1.4f, inputData[1].toFloat(), R.drawable.yellow_blur))
+        values.add(BarEntry(2.8f, inputData[2].toFloat(), R.drawable.green_blur))
 
         // 2. [BarDataSet] 단순 데이터를 막대 모양으로 표시, BarChart의 막대 커스텀
-        val set2 = BarDataSet(values, "엄")
-        set2.setDrawIcons(false)
+        val set2 = BarDataSet(values, "")
+        set2.setDrawIcons(true)
         set2.setDrawValues(true)
         set2.setColors(
-            android.graphics.Color.rgb(0, 255, 0), android.graphics.Color.rgb(255, 255, 0), android.graphics.Color.rgb(255, 0, 0))
+            android.graphics.Color.rgb(255, 0, 0), android.graphics.Color.rgb(255, 255, 0), android.graphics.Color.rgb(0, 255, 0))
         set2.valueFormatter = object : ValueFormatter() {
             override fun getFormattedValue(value: Float): String {
                 return value.toInt().toString()
@@ -222,14 +224,14 @@ class Stat2Fragment : Fragment() {
 
         // 3. [BarData] 보여질 데이터 구성
         val data = BarData(set2)
-        data.barWidth = 0.5f
+        data.barWidth = 1.0f
         data.setValueTextSize(15f)
 
         return data
     }
 
     fun prepareChartData(barChart: HorizontalBarChart, data: BarData) {
-        barChart.setData(data) // BarData 전달
-        barChart.invalidate() // BarChart 갱신해 데이터 표시
+        barChart.setData(data)  // BarData 전달
+        barChart.invalidate()   // BarChart 갱신해 데이터 표시
     }
 }
