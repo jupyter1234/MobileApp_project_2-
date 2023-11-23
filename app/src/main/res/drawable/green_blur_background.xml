@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<shape xmlns:android="http://schemas.android.com/apk/res/android"><!-- Replace "your_color" with the desired background color -->
+    <corners android:radius="5dp" /> <!-- Adjust the radius value to control the roundness of the corners -->
+    <gradient
+        android:type="linear"
+        android:startColor="#ADFFB8"
+        android:centerColor="#45BF55"
+        android:endColor="#ADFFB8" />
+</shape>
+    <!--
+    Figma에서 그대로 가져온 색인데 가운데가 너무 진한 것 같아서
+    값 조절하시면서 쓰는 걸 권장합니다.
+    padding은 20~30정도 있는 게 적당해보입니다.
+
+    사용 예시
+        <TextView
+            android:background="@drawable/green_blur_background"
+            android:layout_width="wrap_content"
+            android:paddingHorizontal="20dp"
+            android:layout_height="wrap_content"
+            android:text="Hello World!"
+            />
+    -->
