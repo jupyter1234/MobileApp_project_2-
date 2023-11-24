@@ -55,10 +55,12 @@ class Stat2Fragment : Fragment() {
 
 
         refresh(db,binding)
-
+        //임시방편
         binding.statTitle1.setOnClickListener {
             refresh(db,binding)
         }
+
+        //새로고침 할 방법 찾기
 
         return binding.root
     }

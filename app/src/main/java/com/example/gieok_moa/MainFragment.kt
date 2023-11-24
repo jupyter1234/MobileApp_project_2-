@@ -85,6 +85,7 @@ class MainFragment : Fragment() {
     //2
     private lateinit var imageUri: Uri
 
+    //갤러리 인텐트 실행해서 사진 선택하면, 내부저장소에 저장하라는 명령어 실행 후, 룸 데이터베이스에 snap 저장
     private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
         if (uri != null) {
             imageUri = uri
@@ -100,7 +101,8 @@ class MainFragment : Fragment() {
         pickImageLauncher.launch("image/*")
     }
 
-    //3
+    //내부 저장소에 image.jpg라는 이름으로 저장 후 실행
+    //fileName 저장할 때 마다 바꿔서 저장하게 변경하기
     private fun storeImageInInternalStorage(imageUri: Uri): Uri? {
         val inputStream = requireContext().contentResolver.openInputStream(imageUri)
         val fileName = "image.jpg"
@@ -129,7 +131,7 @@ class MainFragment : Fragment() {
         return null
     }
 
-    //4
+    //DB에 Snap저장, 지금은 무작위 tag도 만들어서 tag도 저장
     private fun storeImageUriInRoomDatabase(imageUri: Uri) {
 
         val db = UserDatabase.getInstance(requireContext().applicationContext)
@@ -145,6 +147,7 @@ class MainFragment : Fragment() {
         }
     }
 
+    //삭제용
     fun deleteTemps(){
         val db = UserDatabase.getInstance(requireContext().applicationContext)
 

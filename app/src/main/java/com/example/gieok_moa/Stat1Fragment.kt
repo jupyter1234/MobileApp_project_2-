@@ -41,23 +41,22 @@ class Stat1Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentStat1Binding.inflate(inflater,container,false)
-        val db = UserDatabase.getInstance(requireContext().applicationContext)//선언
+        val db = UserDatabase.getInstance(requireContext().applicationContext)//DB선언
         lateinit var datas: List<Snap>
 
         val loading = CoroutineScope(Dispatchers.IO).launch {
             datas = db!!.snapDao().getAll()
-
-        }
+        }//데이터 가져오기
 
         val layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.layoutManager = layoutManager
 
         runBlocking {
             loading.join()
-        }
+        }//데이터 다 가져올 때 까지 wait
 
         val adapter = StatAdapter(datas)
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = adapter//사진 표시는 adapter가
         //아래 코드를 add_btn에 넣어서 업데이트
         //(binding.recyclerView.adapter as StatAdapter).notifyDataSetChanged() {}
         return binding.root
