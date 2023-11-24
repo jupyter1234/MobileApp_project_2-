@@ -5,7 +5,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.gieok_moa.databinding.FragmentStat1Binding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -36,6 +41,25 @@ class Stat1Fragment : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         val binding = FragmentStat1Binding.inflate(inflater,container,false)
+        val db = UserDatabase.getInstance(requireContext().applicationContext)//선언
+        lateinit var datas: List<Snap>
+
+        val loading = CoroutineScope(Dispatchers.IO).launch {
+            datas = db!!.snapDao().getAll()
+
+        }
+
+        val layoutManager = GridLayoutManager(activity, 2)
+        binding.recyclerView.layoutManager = layoutManager
+
+        runBlocking {
+            loading.join()
+        }
+
+        val adapter = StatAdapter(datas)
+        binding.recyclerView.adapter = adapter
+        //아래 코드를 add_btn에 넣어서 업데이트
+        //(binding.recyclerView.adapter as StatAdapter).notifyDataSetChanged() {}
         return binding.root
     }
 

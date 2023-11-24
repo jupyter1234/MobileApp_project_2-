@@ -1,9 +1,16 @@
 package com.example.gieok_moa
 
+import android.app.Activity
+import android.content.Context
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import com.example.gieok_moa.databinding.FragmentStat2Binding
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -46,26 +53,12 @@ class Stat2Fragment : Fragment() {
         val binding = FragmentStat2Binding.inflate(inflater,container,false)
         val db = UserDatabase.getInstance(requireContext().applicationContext)
 
-        deleteTemp(db)
-        generateRandomSnap(db,10)
-        generateTempTags(db,10)
 
-        val moodScoreList = getScoreList(db)//tag가 각각 1,2,3 점일 때를 가진 List<Int> 반환
+        refresh(db,binding)
 
-        val mood_chart = binding.chart
-
-        configureChartAppearance(mood_chart)
-        prepareChartData(mood_chart, createChartData(moodScoreList))
-
-
-        //가장 많이 쓴 Tags가져오기
-        val topTags = getTopTags(db,3)//time_created 1~5까지의 snap들에서 가장 많이 쓴 tags를 count만큼 가져옴
-        if(topTags.size>=1)
-            binding.freq1stTag.setText("1st : ${topTags[0].key} (${topTags[0].value})")
-        if(topTags.size>=2)
-            binding.freq2ndTag.setText("2nd : ${topTags[1].key} (${topTags[1].value})")
-        if(topTags.size>=3)
-            binding.freq3rdTag.setText("3nd : ${topTags[2].key} (${topTags[2].value})")
+        binding.statTitle1.setOnClickListener {
+            refresh(db,binding)
+        }
 
         return binding.root
     }
@@ -88,37 +81,12 @@ class Stat2Fragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
-    }
-    fun generateRandomSnap(db: UserDatabase?, count:Int) {
-        for(i in 1..count) {
-            val t = Snap(i.toLong(), Date(), "", "")
-            db!!.snapDao().insertAll(t)
-        }
-    }
 
-    fun generateTempTags(db: UserDatabase?, count:Int){
-        for(i in 1..count){
-            val state0 = when((1..4).random()){
-                1->"t1"
-                2->"t2"
-                3->"t3"
-                4->"t4"
-                else->"t0"
-            }
-            db!!.tagDao().insertAll(Tag(i.toLong(), state0, arrayOf(Color.RED,Color.YELLOW,Color.GREEN).random(), i.toLong()))
-        }
-    }
-
-    fun deleteTemp(db: UserDatabase?){
-        for(i in db!!.snapDao().getAll()) {
-            db.snapDao().delete(i)
-        }
-        for(i in db.tagDao().getAll()) {
-            db.tagDao().delete(i)
-        }
 
     }
+
     fun getScoreList(db: UserDatabase?):List<Int> {
+
         val tag2List = db!!.tagDao().getAll()
         val colorList = mutableListOf<Int>(0,0,0)
         for(i in tag2List){
@@ -233,5 +201,24 @@ class Stat2Fragment : Fragment() {
     fun prepareChartData(barChart: HorizontalBarChart, data: BarData) {
         barChart.setData(data)  // BarData 전달
         barChart.invalidate()   // BarChart 갱신해 데이터 표시
+    }
+
+    fun refresh(db:UserDatabase?, binding:FragmentStat2Binding){
+        val moodScoreList = getScoreList(db)//tag가 각각 1,2,3 점일 때를 가진 List<Int> 반환
+
+        val mood_chart = binding.chart
+
+        configureChartAppearance(mood_chart)
+        prepareChartData(mood_chart, createChartData(moodScoreList))
+
+
+        //가장 많이 쓴 Tags가져오기
+        val topTags = getTopTags(db,3)//time_created 1~5까지의 snap들에서 가장 많이 쓴 tags를 count만큼 가져옴
+        if(topTags.size>=1)
+            binding.freq1stTag.setText("1st : ${topTags[0].key} (${topTags[0].value})")
+        if(topTags.size>=2)
+            binding.freq2ndTag.setText("2nd : ${topTags[1].key} (${topTags[1].value})")
+        if(topTags.size>=3)
+            binding.freq3rdTag.setText("3nd : ${topTags[2].key} (${topTags[2].value})")
     }
 }

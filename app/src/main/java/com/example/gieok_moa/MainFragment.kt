@@ -1,10 +1,27 @@
 package com.example.gieok_moa
 
+import android.app.Activity
+import android.content.Intent
+import android.media.Image
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.room.Room
+import com.example.gieok_moa.databinding.FragmentMainBinding
+import com.example.gieok_moa.databinding.FragmentStat2Binding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import java.io.File
+import java.io.FileOutputStream
+import java.io.IOException
+import java.io.OutputStream
+import java.util.Date
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -33,8 +50,16 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+
+        val binding = FragmentMainBinding.inflate(inflater,container,false)
+
+        //deleteTemps()
+
+        binding.addSnap.setOnClickListener {
+            pickImageFromGallery()
+        }
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_main, container, false)
+        return binding.root
     }
 
     companion object {
@@ -56,4 +81,84 @@ class MainFragment : Fragment() {
                 }
             }
     }
+
+    //2
+    private lateinit var imageUri: Uri
+
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+        if (uri != null) {
+            imageUri = uri
+            // Store the image in internal storage
+            storeImageInInternalStorage(uri)?.let { storedImageUri ->
+                // Store the URI of the stored image in the Room database
+                storeImageUriInRoomDatabase(storedImageUri)
+            }
+        }
+    }
+
+    private fun pickImageFromGallery() {
+        pickImageLauncher.launch("image/*")
+    }
+
+    //3
+    private fun storeImageInInternalStorage(imageUri: Uri): Uri? {
+        val inputStream = requireContext().contentResolver.openInputStream(imageUri)
+        val fileName = "image.jpg"
+        val outputStream: OutputStream
+
+        try {
+            val internalStorageDir = requireContext().filesDir
+            val internalStorageFile = File(internalStorageDir, fileName)
+            outputStream = FileOutputStream(internalStorageFile)
+
+            val buffer = ByteArray(4 * 1024)
+            var bytesRead: Int
+            while (inputStream?.read(buffer).also { bytesRead = it!! } != -1) {
+                outputStream.write(buffer, 0, bytesRead)
+            }
+
+            outputStream.flush()
+            outputStream.close()
+            inputStream?.close()
+
+            return Uri.fromFile(internalStorageFile)
+        } catch (e: IOException) {
+            e.printStackTrace()
+        }
+
+        return null
+    }
+
+    //4
+    private fun storeImageUriInRoomDatabase(imageUri: Uri) {
+
+        val db = UserDatabase.getInstance(requireContext().applicationContext)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            for(i in 1..10){
+                val snap1 = Snap(i.toLong(), Date(), imageUri.toString(), "")
+                val tag1 = Tag(i.toLong(), arrayOf("t1","t2","t3","t4").random(), arrayOf(Color.GREEN,Color.RED,Color.YELLOW).random(), i.toLong())
+                db!!.snapDao().insertAll(snap1)
+                db.tagDao().insertAll(tag1)
+            }
+
+        }
+    }
+
+    fun deleteTemps(){
+        val db = UserDatabase.getInstance(requireContext().applicationContext)
+
+        CoroutineScope(Dispatchers.IO).launch {
+            for(i in db!!.snapDao().getAll()) {
+                db.snapDao().delete(i)
+            }
+            for(i in db.tagDao().getAll()) {
+                db.tagDao().delete(i)
+            }
+
+        }
+    }
+
+
+
 }

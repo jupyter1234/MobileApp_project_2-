@@ -2,18 +2,25 @@ package com.example.gieok_moa
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.net.toUri
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gieok_moa.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.Date
 
 class MainActivity : AppCompatActivity() {
     class MainFragmentPagerAdapter(activity: FragmentActivity) :
         FragmentStateAdapter(activity) {
         val fragments: List<Fragment>
         init {
-            fragments = listOf(Stat2Fragment())
-            //fragments = listOf(MainFragment(),Stat1Fragment(),Stat2Fragment())
+
+            fragments = listOf(MainFragment(),Stat1Fragment(),Stat2Fragment())
         }
         override fun getItemCount(): Int = fragments.size
         override fun createFragment(position: Int): Fragment = fragments[position]
