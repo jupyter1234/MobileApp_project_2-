@@ -58,20 +58,21 @@
             android:textAppearance="@style/year" />
     </RelativeLayout>
 
-
-
+    <!--요일-->
     <LinearLayout
         android:id="@+id/days"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         android:layout_alignParentLeft="true"
+        android:layout_marginRight="35dp"
         android:layout_marginLeft="35dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="2dp">
         <TextView
             android:fontFamily="@font/po_ggoma"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="일"
             android:textAppearance="@style/days"
@@ -80,7 +81,8 @@
             />
         <TextView
             android:fontFamily="@font/po_ggoma"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="월"
             android:textAppearance="@style/days"
@@ -89,7 +91,8 @@
             />
         <TextView
             android:fontFamily="@font/po_ggoma"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="화"
             android:textAppearance="@style/days"
@@ -98,7 +101,8 @@
             />
         <TextView
             android:fontFamily="@font/po_ggoma"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="수"
             android:textAppearance="@style/days"
@@ -107,7 +111,8 @@
             />
         <TextView
             android:fontFamily="@font/po_ggoma"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="목"
             android:textAppearance="@style/days"
@@ -116,7 +121,8 @@
             />
         <TextView
             android:fontFamily="@font/po_ggoma"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="금"
             android:textAppearance="@style/days"
@@ -125,7 +131,8 @@
             />
         <TextView
             android:fontFamily="@font/po_ggoma"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
             android:text="토"
             android:textAppearance="@style/days"
