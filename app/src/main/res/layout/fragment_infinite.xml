@@ -1,17 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".InfiniteFragment">
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/infinite"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context="com.example.gieok_moa.MainActivity">
     <TextView
+        android:fontFamily="@font/po_ggoma"
+        android:id="@+id/pastmonth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="3dp"
+        android:text="10월"
+        android:textAppearance="@style/pastmonth"
+        android:gravity="top"
+        />
+    <View
+        android:id="@+id/bar2"
+        android:layout_width="330dp"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/bar2"
+        />
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="캘린더 화면" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:id="@+id/month"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_marginLeft="31dp"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="13dp"
+            android:text="11월"
+            android:textAppearance="@style/month"
+            android:gravity="top"
+            />
 
-</FrameLayout>
+        <TextView
+            android:id="@+id/year"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="80dp"
+            android:layout_alignBottom="@+id/month"
+            android:fontFamily="@font/po_ggoma"
+            android:text="2023"
+            android:textAppearance="@style/year" />
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+        android:id="@+id/days"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="35dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="2dp">
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="일"
+            android:textAppearance="@style/days"
+            android:gravity="top"
+            android:layout_marginRight="20dp"
+            />
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="월"
+            android:textAppearance="@style/days"
+            android:gravity="top"
+            android:layout_marginRight="20dp"
+            />
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="화"
+            android:textAppearance="@style/days"
+            android:gravity="top"
+            android:layout_marginRight="20dp"
+            />
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="수"
+            android:textAppearance="@style/days"
+            android:gravity="top"
+            android:layout_marginRight="20dp"
+            />
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="목"
+            android:textAppearance="@style/days"
+            android:gravity="top"
+            android:layout_marginRight="20dp"
+            />
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="금"
+            android:textAppearance="@style/days"
+            android:gravity="top"
+            android:layout_marginRight="20dp"
+            />
+        <TextView
+            android:fontFamily="@font/po_ggoma"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="토"
+            android:textAppearance="@style/days"
+            android:gravity="top"
+            />
+
+    </LinearLayout>
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="0.3"/>
+
+    <View
+        android:id="@+id/bar1"
+        android:layout_width="330dp"
+        android:layout_height="2dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="13dp"
+        android:background="@drawable/bar2" />
+
+    <TextView
+        android:fontFamily="@font/po_ggoma"
+        android:id="@+id/nextmonth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_marginLeft="30dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="3dp"
+        android:text="12월"
+        android:textAppearance="@style/pastmonth"
+        android:gravity="top"
+        />
+</LinearLayout>
