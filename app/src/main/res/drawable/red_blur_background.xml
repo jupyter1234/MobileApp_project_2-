@@ -6,6 +6,9 @@
         android:startColor="#FFB2B8"
         android:centerColor="#80E52535"
         android:endColor="#FFB2B8" />
+    <size
+        android:height="26dp"
+        android:width="43dp"/>
 </shape>
     <!--
     Figma에서 그대로 가져온 색인데 가운데가 너무 진한 것 같아서
