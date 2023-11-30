@@ -5,6 +5,14 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.gieok_moa.databinding.FragmentStat1Binding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.Calendar
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -29,12 +37,39 @@ class Stat1Fragment : Fragment() {
         }
     }
 
+    lateinit var snapViews : RecyclerView
+    lateinit var datas: MutableList<Snap>
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_stat1, container, false)
+        val binding = FragmentStat1Binding.inflate(inflater,container,false)
+
+        val db = UserDatabase.getInstance(requireContext().applicationContext)//DB선언
+
+        val loading = CoroutineScope(Dispatchers.IO).launch {
+            datas = db!!.snapDao().getAll().toMutableList()
+        }
+        runBlocking {
+            loading.join()
+        }//데이터 다 가져올 때 까지 wait
+        val startOfDay = Calendar.getInstance()
+        startOfDay.set(Calendar.HOUR_OF_DAY, 0)
+        startOfDay.set(Calendar.MINUTE, 0)
+        startOfDay.set(Calendar.SECOND, 0)
+        startOfDay.set(Calendar.MILLISECOND, 0)
+        val endOfDay = (startOfDay.clone() as Calendar)
+        endOfDay.add(Calendar.HOUR_OF_DAY, 24)
+        datas.removeIf {it.createdDate.time < startOfDay.time.time || it.createdDate.time >= endOfDay.time.time }
+
+        val layoutManager = GridLayoutManager(activity, 2)
+        binding.recyclerView.layoutManager = layoutManager
+
+        snapViews = binding.recyclerView
+        val adapter = StatAdapter(datas)
+        snapViews.adapter = adapter
+        return binding.root
     }
 
     companion object {
@@ -55,5 +90,31 @@ class Stat1Fragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+    }
+
+    fun updateDatas(){
+        val db = UserDatabase.getInstance(requireContext().applicationContext)//DB선언
+
+        val loading = CoroutineScope(Dispatchers.IO).launch {
+            datas = db!!.snapDao().getAll().toMutableList()
+        }
+        runBlocking {
+            loading.join()
+        }//데이터 다 가져올 때 까지 wait
+        val startOfDay = Calendar.getInstance()
+        startOfDay.set(Calendar.HOUR_OF_DAY, 0)
+        startOfDay.set(Calendar.MINUTE, 0)
+        startOfDay.set(Calendar.SECOND, 0)
+        startOfDay.set(Calendar.MILLISECOND, 0)
+        val endOfDay = (startOfDay.clone() as Calendar)
+        endOfDay.add(Calendar.HOUR_OF_DAY, 24)
+        datas.removeIf {it.createdDate.time < startOfDay.time.time || it.createdDate.time >= endOfDay.time.time }
+    }
+
+    fun updateStat1(){
+        updateDatas()
+
+        val adapter = StatAdapter(datas)
+        snapViews.adapter = adapter
     }
 }
