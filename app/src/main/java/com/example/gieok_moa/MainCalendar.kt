@@ -7,7 +7,7 @@ import androidx.core.content.ContextCompat
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gieok_moa.databinding.ActivityMainCalendarBinding
 
-class MainActivity : AppCompatActivity() {
+class MainCalendar : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val binding = ActivityMainCalendarBinding.inflate(layoutInflater)
         super.onCreate(savedInstanceState)

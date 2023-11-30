@@ -62,8 +62,8 @@ class MainFragment : Fragment() {
         }
         binding.calendarButton.setOnClickListener {
             //Log.d("check", "calendar button clicked")
-            //val intent: Intent = Intent(this, oooActivity::class.java)
-            //startActivity(intent)
+            val intent: Intent = Intent(activity, MainCalendar::class.java)
+            startActivity(intent)
         }
 
         val db = UserDatabase.getInstance(requireContext().applicationContext)
