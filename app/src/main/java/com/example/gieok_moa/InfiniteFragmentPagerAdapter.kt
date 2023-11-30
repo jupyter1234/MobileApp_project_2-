@@ -10,10 +10,6 @@ import com.example.gieok_moa.databinding.FragmentInfiniteBinding
 //main <- infiniteFragment를 설정하여 씌우는 adapter
 
 class InfiniteFragmentPagerAdapter(activity: FragmentActivity) : FragmentStateAdapter(activity) {
-    //override fun ViewHolder(val binding: FragmentInfiniteBinding) :
-
-    val FragmentPosition = Int.MAX_VALUE/2
-
     override fun getItemCount(): Int = Int.MAX_VALUE
     override fun createFragment(position: Int): Fragment {
         val infiniteFragment = InfiniteFragment()

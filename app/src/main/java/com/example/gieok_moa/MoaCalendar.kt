@@ -6,7 +6,7 @@ import java.util.Date
 class MoaCalendar(date: Date) {
     companion object {
         const val DAYS_OF_WEEK = 7
-        const val LOW_OF_CALENDAR = 6
+        const val LOW_OF_CALENDAR = 5
     }
 
     val calendar = Calendar.getInstance()

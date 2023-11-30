@@ -23,6 +23,7 @@ class MainActivity : AppCompatActivity() {
         //어댑터 적용
         binding.viewpager.adapter = InfiniteFragmentPagerAdapter(this)
         binding.viewpager.orientation = ViewPager2.ORIENTATION_VERTICAL
+        //위 아래로 무한대 스크롤 가능
         binding.viewpager.setCurrentItem((Int.MAX_VALUE /2), false)
     }
 }
