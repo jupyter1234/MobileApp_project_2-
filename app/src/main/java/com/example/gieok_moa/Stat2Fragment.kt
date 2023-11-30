@@ -226,11 +226,11 @@ class Stat2Fragment : Fragment() {
         if(topTags.size>=2)
             tagTxt[1].setText("2nd : ${topTags[1].key} (${topTags[1].value})")
         else
-            tagTxt[0].setText("2nd : 정보 없음")
+            tagTxt[1].setText("2nd : 정보 없음")
         if(topTags.size>=3)
             tagTxt[2].setText("3rd : ${topTags[2].key} (${topTags[2].value})")
         else
-            tagTxt[0].setText("3rd : 정보 없음")
+            tagTxt[2].setText("3rd : 정보 없음")
     }
 
     fun getTagsByDate(start: Calendar,end: Calendar):List<Tag>{
