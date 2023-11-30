@@ -2,6 +2,7 @@ package com.example.gieok_moa
 
 import android.app.AlertDialog
 import android.content.Context
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -74,7 +75,7 @@ class MainFragment : Fragment() {
         }
 
         deleteTemps()
-        val imageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button"
+        val imageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button1"
         val snapAddButton: Snap = Snap(0, Date(), imageUrl)
         val snapEx = Snap(1, Date(),
             "https://images.squarespace-cdn.com/content/v1/56840d91e0327c52f60c392f/1452044547091-64DRLH2A3XIW3Z6GUQHF/GOOD_Logo.jpg",
@@ -112,6 +113,8 @@ class MainFragment : Fragment() {
                     selectionDialog.takePic.setOnClickListener {
                         // move to Camera App
                         Log.d("test", "take a picture")
+                        val intent1=Intent(activity, AddSnapActivity::class.java)
+                        startActivity(intent1)
                     }
                     selectionDialog.fromGal.setOnClickListener {
                         // move to Gallery App
