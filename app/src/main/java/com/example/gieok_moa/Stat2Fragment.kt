@@ -14,6 +14,11 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.util.Calendar
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -87,7 +92,7 @@ class Stat2Fragment : Fragment() {
 
     fun getScoreList(db: UserDatabase?):List<Int> {
 
-        val tag2List = db!!.tagDao().getAll()
+        val tag2List = getTagsOfMonth()
         val colorList = mutableListOf<Int>(0,0,0)
         for(i in tag2List){
             when(i.color){
@@ -102,7 +107,7 @@ class Stat2Fragment : Fragment() {
     fun getTopTags(db: UserDatabase?, count: Int):List<MutableMap.MutableEntry<String,Int>> {
 
 
-        val tag2List = db!!.tagDao().getAll()
+        val tag2List = getTagsOfMonth()
 
         val tagCountMap: MutableMap<String, Int> = HashMap()
 
@@ -216,15 +221,47 @@ class Stat2Fragment : Fragment() {
         val topTags = getTopTags(db,3)//time_created 1~5까지의 snap들에서 가장 많이 쓴 tags를 count만큼 가져옴
         if(topTags.size>=1)
             tagTxt[0].setText("1st : ${topTags[0].key} (${topTags[0].value})")
+        else
+            tagTxt[0].setText("1st : 정보 없음")
         if(topTags.size>=2)
             tagTxt[1].setText("2nd : ${topTags[1].key} (${topTags[1].value})")
+        else
+            tagTxt[0].setText("2nd : 정보 없음")
         if(topTags.size>=3)
-            tagTxt[2].setText("3nd : ${topTags[2].key} (${topTags[2].value})")
+            tagTxt[2].setText("3rd : ${topTags[2].key} (${topTags[2].value})")
+        else
+            tagTxt[0].setText("3rd : 정보 없음")
     }
 
-    fun getTagOfCurrentMonth(){
+    fun getTagsByDate(start: Calendar,end: Calendar):List<Tag>{
         val db = UserDatabase.getInstance(requireContext().applicationContext)
+        lateinit var snaps : MutableList<Snap>
+        lateinit var tags: MutableList<Tag>
+        val loading = CoroutineScope(Dispatchers.IO).launch {
+            snaps = db!!.snapDao().getAll().toMutableList()
+            tags = db.tagDao().getAll().toMutableList()
+        }
+        runBlocking {
+            loading.join()
+        }//데이터 다 가져올 때 까지 wait
 
+        snaps.removeIf {it.createdDate.time < start.time.time || it.createdDate.time >= end.time.time }
+        tags.removeIf {
+            val i = it.ownedSnapID
+            snaps.any { it.snapId == i }}
 
+        return tags.toList()
+    }
+
+    fun getTagsOfMonth():List<Tag>{
+        val start = Calendar.getInstance()
+        start.set(Calendar.DAY_OF_MONTH, 1)
+        start.set(Calendar.HOUR_OF_DAY, 0)
+        start.set(Calendar.MINUTE, 0)
+        start.set(Calendar.SECOND, 0)
+        start.set(Calendar.MILLISECOND, 0)
+        val end = (start.clone() as Calendar)
+        end.add(Calendar.MONTH, 1)
+        return getTagsByDate(start, end)
     }
 }

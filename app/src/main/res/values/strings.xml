@@ -8,4 +8,5 @@
     <string name="time1">14:00</string>
     <string name="time2">15:09</string>
     <string name="time3">15:33</string>
+    <string name="no_tag">정보 없음</string>
 </resources>
