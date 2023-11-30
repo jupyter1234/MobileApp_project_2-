@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
@@ -22,9 +23,10 @@ import java.util.Calendar
 import java.util.Currency
 import java.util.Date
 import java.util.Locale
+import kotlin.math.absoluteValue
 
 class InfiniteFragment : Fragment() {
-    var pageIndex:Int = 0
+    var pageIndex = 0
     companion object {
         var instance : InfiniteFragment? = null
     }
@@ -43,7 +45,7 @@ class InfiniteFragment : Fragment() {
         val binding = FragmentInfiniteBinding.inflate(inflater,container,false)
         // 페이지 인덱스마다 보여 줄 달 설정
         val currentCalendar = Calendar.getInstance().apply {
-            add(Calendar.MONTH, pageIndex)
+            add(Calendar.MONTH, (pageIndex - Int.MAX_VALUE / 2))
         }
 
         val currentYear = currentCalendar.get(Calendar.YEAR)

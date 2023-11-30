@@ -19,11 +19,10 @@ class MainActivity : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(back)
         title = ""
-        binding.viewpager.adapter = InfiniteFragmentPagerAdapter(this)
-        binding.viewpager.orientation = ViewPager2.ORIENTATION_VERTICAL
 
         //어댑터 적용
         binding.viewpager.adapter = InfiniteFragmentPagerAdapter(this)
         binding.viewpager.orientation = ViewPager2.ORIENTATION_VERTICAL
+        binding.viewpager.setCurrentItem((Int.MAX_VALUE /2), false)
     }
 }
