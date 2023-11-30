@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "175229624475",
+    "project_id": "gieok-moa",
+    "storage_bucket": "gieok-moa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:175229624475:android:f48ea86a0d07204459263e",
+        "android_client_info": {
+          "package_name": "com.example.gieok_moa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyALRv2OFXcN0z4C1TyTFN0ovlqsY5QiLMM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
