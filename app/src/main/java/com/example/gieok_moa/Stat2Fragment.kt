@@ -1,16 +1,10 @@
 package com.example.gieok_moa
 
-import android.app.Activity
-import android.content.Context
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import android.widget.TextView
 import androidx.fragment.app.Fragment
 import com.example.gieok_moa.databinding.FragmentStat2Binding
 import com.github.mikephil.charting.charts.HorizontalBarChart
@@ -20,7 +14,6 @@ import com.github.mikephil.charting.data.BarData
 import com.github.mikephil.charting.data.BarDataSet
 import com.github.mikephil.charting.data.BarEntry
 import com.github.mikephil.charting.formatter.ValueFormatter
-import java.util.Date
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -46,18 +39,23 @@ class Stat2Fragment : Fragment() {
         }
     }
 
+    lateinit var color_chart:HorizontalBarChart
+    var tagTxt : MutableList<TextView> = mutableListOf<TextView>()
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val binding = FragmentStat2Binding.inflate(inflater,container,false)
-        val db = UserDatabase.getInstance(requireContext().applicationContext)
 
-
-        refresh(db,binding)
+        color_chart = binding.chart
+        tagTxt.add(binding.freq1stTag)
+        tagTxt.add(binding.freq2ndTag)
+        tagTxt.add(binding.freq3rdTag)
+        refresh()
         //임시방편
         binding.statTitle1.setOnClickListener {
-            refresh(db,binding)
+            refresh()
         }
 
         //새로고침 할 방법 찾기
@@ -205,22 +203,28 @@ class Stat2Fragment : Fragment() {
         barChart.invalidate()   // BarChart 갱신해 데이터 표시
     }
 
-    fun refresh(db:UserDatabase?, binding:FragmentStat2Binding){
+    fun refresh(){
+        val db = UserDatabase.getInstance(requireContext().applicationContext)
+
         val moodScoreList = getScoreList(db)//tag가 각각 1,2,3 점일 때를 가진 List<Int> 반환
 
-        val mood_chart = binding.chart
-
-        configureChartAppearance(mood_chart)
-        prepareChartData(mood_chart, createChartData(moodScoreList))
+        configureChartAppearance(color_chart)
+        prepareChartData(color_chart, createChartData(moodScoreList))
 
 
         //가장 많이 쓴 Tags가져오기
         val topTags = getTopTags(db,3)//time_created 1~5까지의 snap들에서 가장 많이 쓴 tags를 count만큼 가져옴
         if(topTags.size>=1)
-            binding.freq1stTag.setText("1st : ${topTags[0].key} (${topTags[0].value})")
+            tagTxt[0].setText("1st : ${topTags[0].key} (${topTags[0].value})")
         if(topTags.size>=2)
-            binding.freq2ndTag.setText("2nd : ${topTags[1].key} (${topTags[1].value})")
+            tagTxt[1].setText("2nd : ${topTags[1].key} (${topTags[1].value})")
         if(topTags.size>=3)
-            binding.freq3rdTag.setText("3nd : ${topTags[2].key} (${topTags[2].value})")
+            tagTxt[2].setText("3nd : ${topTags[2].key} (${topTags[2].value})")
+    }
+
+    fun getTagOfCurrentMonth(){
+        val db = UserDatabase.getInstance(requireContext().applicationContext)
+
+
     }
 }

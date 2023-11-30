@@ -16,5 +16,19 @@
         android:text="Add Snap"
         android:id="@+id/add_snap"
         android:textSize="50sp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Update View"
+        android:id="@+id/add_snap2"
+        android:textSize="50sp"
+        android:layout_marginTop="200dp"/>
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Snap"
+        android:id="@+id/delete_snap"
+        android:textSize="50sp"
+        android:layout_marginTop="400dp"/>
 
 </FrameLayout>

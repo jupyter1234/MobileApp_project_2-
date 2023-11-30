@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">gieok_moa</string>
     <string name="stat_title1">11월의 모아님</string>
-    <string name="stat_title2">오늘 하루는 어땠나요?</string>
+    <string name="stat_title2">이번 달은 어땠나요?</string>
     <string name="mood_score_title">색상 통계</string>
     <string name="tag_stat_title">가장 자주 쓴 태그</string>
     <string name="daily_stat_title">오늘의 하루를 모아봤어요</string>

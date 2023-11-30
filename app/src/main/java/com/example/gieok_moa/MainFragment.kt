@@ -1,19 +1,14 @@
 package com.example.gieok_moa
 
-import android.app.Activity
-import android.content.Intent
-import android.media.Image
+import android.content.Context
 import android.net.Uri
 import android.os.Bundle
-import android.provider.MediaStore
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.room.Room
 import com.example.gieok_moa.databinding.FragmentMainBinding
-import com.example.gieok_moa.databinding.FragmentStat2Binding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -55,11 +50,37 @@ class MainFragment : Fragment() {
 
         //deleteTemps()
 
+
+
         binding.addSnap.setOnClickListener {
             pickImageFromGallery()
         }
+
+        binding.addSnap2.setOnClickListener {
+            listener?.onSnapAdded()
+        }
+        binding.deleteSnap.setOnClickListener {
+            deleteTemps()
+
+        }
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    private var listener: OnSnapAddedListener? = null
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        if (context is OnSnapAddedListener) {
+            listener = context
+        } else {
+            throw RuntimeException(context.toString() + " must implement OnAddSnapClickListener")
+        }
+    }
+
+    override fun onDetach() {
+        super.onDetach()
+        listener = null
     }
 
     companion object {
@@ -93,6 +114,7 @@ class MainFragment : Fragment() {
             storeImageInInternalStorage(uri)?.let { storedImageUri ->
                 // Store the URI of the stored image in the Room database
                 storeImageUriInRoomDatabase(storedImageUri)
+
             }
         }
     }
@@ -138,8 +160,8 @@ class MainFragment : Fragment() {
 
         CoroutineScope(Dispatchers.IO).launch {
             for(i in 1..10){
-                val snap1 = Snap(i.toLong(), Date(), imageUri.toString(), "")
-                val tag1 = Tag(i.toLong(), arrayOf("t1","t2","t3","t4").random(), arrayOf(Color.GREEN,Color.RED,Color.YELLOW).random(), i.toLong())
+                val snap1 = Snap(0, Date(), imageUri.toString(), "")
+                val tag1 = Tag(0, arrayOf("t1","t2","t3","t4").random(), arrayOf(Color.GREEN,Color.RED,Color.YELLOW).random(), i.toLong())
                 db!!.snapDao().insertAll(snap1)
                 db.tagDao().insertAll(tag1)
             }
@@ -161,7 +183,7 @@ class MainFragment : Fragment() {
 
         }
     }
-
-
-
+}
+interface OnSnapAddedListener {
+    fun onSnapAdded()
 }
