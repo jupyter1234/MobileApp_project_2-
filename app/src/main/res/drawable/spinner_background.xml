@@ -4,8 +4,6 @@
         <layer-list>
             <item>
                 <shape android:shape="rectangle">
-                    <padding
-                        android:left="28dp"/>
                     <corners android:radius="4dp"/>
                 </shape>
             </item>

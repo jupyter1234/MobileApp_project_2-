@@ -2,7 +2,6 @@ package com.example.gieok_moa
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.net.toUri
@@ -33,8 +32,6 @@ abstract class UserDatabase: RoomDatabase() {
     companion object {
         private var instance: UserDatabase? = null
 
-
-        @Synchronized
         fun getInstance(context: Context): UserDatabase? {
             if (instance == null) {
                 synchronized(UserDatabase::class){
@@ -42,8 +39,7 @@ abstract class UserDatabase: RoomDatabase() {
                         context.applicationContext,
                         UserDatabase::class.java,
                         "user-database"
-                    ).allowMainThreadQueries()
-                        .build()
+                    ).build()
                 }
             }
             return instance

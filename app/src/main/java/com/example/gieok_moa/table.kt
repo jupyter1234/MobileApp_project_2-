@@ -9,26 +9,26 @@ import java.util.Date
 @Entity(tableName = "user_table")
 data class User (
     @PrimaryKey(autoGenerate = true)
-    val userId: Long = 0,
-    val name: String = ""
+    var userId: Long = 0,
+    var name: String = ""
 )
 
 @Entity(tableName = "snap_table")
 data class Snap (
     @PrimaryKey(autoGenerate = true)
-    val snapId: Long = 0,
-    val createdDate: Date,
-    val photoUrl: String = "",
-    val comment: String = ""
+    var snapId: Long = 0,
+    var createdDate: Date,
+    var photoUrl: String = "",
+    var comment: String = ""
 )
 
 @Entity(tableName = "tag_table")
 data class Tag (
     @PrimaryKey(autoGenerate = true)
-    val tagID: Long = 0,
-    val staus: String = "",
-    val color: Color,
-    val ownedSnapID: String = ""
+    var tagID: Long = 0,
+    var staus: String = "",
+    var color: Color,
+    var ownedSnapID: Long = 0
 )
 
 //snap : tag = 1 : 1

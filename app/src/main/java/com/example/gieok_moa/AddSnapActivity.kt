@@ -1,8 +1,9 @@
-/*
 package com.example.gieok_moa
 
+import android.content.Context
 import android.nfc.Tag
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.AdapterView
 import android.widget.Spinner
@@ -13,66 +14,79 @@ import com.example.gieok_moa.databinding.ActivityMainBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.text.FieldPosition
+import java.util.Date
 
 class AddSnapActivity : AppCompatActivity() {
 
-   */
-/* val db = UserDatabase.getInstance(this.applicationContext)
     lateinit var datas: List<com.example.gieok_moa.Tag>
+    lateinit var snapdatas: List<Snap>
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding= ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        CoroutineScope(Dispatchers.IO).launch {
-            val i = 0
-            val st="행복"
-            val color=Color.RED
-            val tag1 = com.example.gieok_moa.Tag(i.toLong(), st,color)
-            db!!.tagDao().insertAll(tag1)
-        }
 
+        val currentContext: Context = this
+        //db생성시 code
+        val db = UserDatabase.getInstance(currentContext.applicationContext)
         val loading = CoroutineScope(Dispatchers.IO).launch {
             datas = db!!.tagDao().getAll()
         }
+        runBlocking {
+            loading.join()
+        }
 
+        //Log.d("park",datas[0].staus)
         var spinnerAdapterTag=TagSpinnerAdapter(this, R.layout.item_spinner, datas)
 
         binding.tagSpinner.adapter=spinnerAdapterTag
-*//*
-*/
-/*
-        //스피너 객체 생성
-        val spinnerTag: Spinner =findViewById(R.id.tag_spinner)
+        Log.d("park","success3")
 
-        //리스트 생성
-        val tagList: ArrayList<Tag> = ArrayList<Tag>()
+        binding.tagSpinner.onItemSelectedListener= object : AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
+                // 선택된 항목의 값 가져오기
+                val selectedItem = parent.getItemAtPosition(position)
 
-        //데이터 생성
+            }
 
-        //데이터 리스트에 담기
-
-        //어댑터 생성
-        val adapter: TagSpinnerAdapter=TagAdapter(this, tagList)
-
-        //어댑터 적용
-        //spinnerTag.adapter=adapter*//*
-*/
-/*
+            override fun onNothingSelected(parent: AdapterView<*>) {
+                // 아무것도 선택되지 않았을 때의 동작
+            }
+        }
         binding.cancelButton.setOnClickListener {
             finish()
         }
         binding.completeButton.setOnClickListener {
             //database에 저장후 mainpage로 돌아감
+            val loading = CoroutineScope(Dispatchers.IO).launch {
+                snapdatas = db!!.snapDao().getAll()
+            }
+            runBlocking {
+                loading.join()
+            }
+
+            val date= Date()
+            val imageUri = "".toUri()
+            var usercomment=binding.edittext.text.toString()
+            if(usercomment==null) usercomment=""
+
+            val snapid=snapdatas[snapdatas.size-1].snapId+1
+            CoroutineScope(Dispatchers.IO).launch{
+                val snap1 = Snap(snapid.toLong(), date, imageUri.toString(), usercomment)
+                db!!.snapDao().insertAll(snap1)
+            }
+            Log.d("park",usercomment)
             finish()
         }
         binding.addtag.setOnClickListener {
 
         }
-    }*//*
+    }
 
 
 
-}*/
+}
