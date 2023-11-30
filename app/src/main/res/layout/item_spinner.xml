@@ -15,7 +15,7 @@
         android:background="@drawable/red_blur_background"
         android:text="행복"
         android:gravity="center"
-        android:fontFamily="@font/myfont" />
+        android:fontFamily="@font/po" />
 
 
 

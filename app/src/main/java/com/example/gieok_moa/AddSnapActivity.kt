@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
 import androidx.room.PrimaryKey
 import com.example.gieok_moa.databinding.ActivityMainBinding
+import com.example.gieok_moa.databinding.AddSnapPageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -26,7 +27,7 @@ class AddSnapActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val binding= ActivityMainBinding.inflate(layoutInflater)
+        val binding= AddSnapPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
 
