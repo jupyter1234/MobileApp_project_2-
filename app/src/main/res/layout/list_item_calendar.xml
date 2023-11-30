@@ -7,12 +7,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <LinearLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/date"
+        android:id="@+id/day"
         android:layout_width="34dp"
         android:layout_height="62dp"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/some_id"
+            android:id="@+id/date"
+            android:fontFamily="@font/po_ggoma"
             android:layout_width="7dp"
             android:layout_height="18dp"
             android:text="1"

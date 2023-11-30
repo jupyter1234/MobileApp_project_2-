@@ -11,10 +11,14 @@ class MoaCalendar(date: Date) {
 
     val calendar = Calendar.getInstance()
 
+    //이전 달 꼬리
     var prevTail = 0
+    //다음달 헤드
+    //이전달 다음달 날들을 다 연결해야 해당 달 시작 요일이 정확하게 반영됨
     var nextHead = 0
     var currentMaxDate = 0
 
+    //해당 달 날짜 기록할 배열
     var dateList = arrayListOf<Int>()
 
     init {
@@ -49,7 +53,6 @@ class MoaCalendar(date: Date) {
 
         for (i in 1..prevTail) dateList.add(++maxOffsetDate)
     }
-
     private fun makeCurrentMonth(calendar: Calendar) {
         for (i in 1..calendar.getActualMaximum(Calendar.DATE)) dateList.add(i)
     }
