@@ -2,15 +2,21 @@ package com.example.gieok_moa
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
 import com.example.gieok_moa.databinding.ItemSnapBinding
+import java.text.SimpleDateFormat
 
 class MyAdapter(val datas: MutableList<Snap>, val clickListener: (Snap)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     private lateinit var binding: ItemSnapBinding
     inner class MyViewHolder(val binding: ItemSnapBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(item: Snap){
-            binding.snapTime.text = item.time
-            binding.snapImage.setImageResource(item.image)
+            binding.snapTime.text = SimpleDateFormat("HH:mm").format(item.createdDate)
+            Glide.with(binding.root)
+                .load(item.photoUrl.toUri())
+                .into(binding.snapImage)
+            // add tag...
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
