@@ -13,6 +13,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
@@ -47,6 +48,8 @@ class InfiniteFragment : Fragment() {
         val currentCalendar = Calendar.getInstance().apply {
             add(Calendar.MONTH, (pageIndex - Int.MAX_VALUE / 2))
         }
+        //이동한 페이지의 첫번째 날짜 선택 -> 이 날짜로 캘린더 만들어야됨
+        // val date = currentCalendar.get(Calendar.TIME)
 
         val currentYear = currentCalendar.get(Calendar.YEAR)
         val currentMonth = currentCalendar.get(Calendar.MONTH) + 1
@@ -71,6 +74,9 @@ class InfiniteFragment : Fragment() {
         binding.pastmonth.text = pastMonth.toString() + "월"
         binding.nextmonth.text = nextMonth.toString() + "월"
 
+        //날짜 표시를 위한 recyclerview 등록
+        binding.daysItem.adapter = CalendarAdapter(currentCalendar)
+        binding.daysItem.layoutManager = GridLayoutManager(this.context,7)
         return binding.root
     }
     override fun onDestroy() {

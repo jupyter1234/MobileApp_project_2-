@@ -1,16 +1,20 @@
 package com.example.gieok_moa
 
+import android.util.Log
+import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gieok_moa.databinding.ListItemCalendarBinding
+import java.util.Calendar
 import java.util.Date
 
-class CalendarAdapter(val date:Date) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CalendarAdapter(val calendar: Calendar) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class CalendarViewHolder(val binding: ListItemCalendarBinding) : RecyclerView.ViewHolder(binding.root)
     var dataList: ArrayList<Int> = arrayListOf()
 
     //moacalendar을 이용해서 날짜 리스트 세팅
-    var moaCalendar: MoaCalendar = MoaCalendar(date)
+    var moaCalendar: MoaCalendar = MoaCalendar(calendar)
     init {
         moaCalendar.initBaseCalendar()
         dataList = moaCalendar.dateList
@@ -18,16 +22,31 @@ class CalendarAdapter(val date:Date) : RecyclerView.Adapter<RecyclerView.ViewHol
 
     //날짜 클릭 기능은 나중에 구현하기
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        TODO()
-    }
+    //항목 구성에 필요한 뷰 홀더 객체 준비
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder =
+        CalendarViewHolder(ListItemCalendarBinding.inflate(LayoutInflater.from(parent.context),parent,false))
 
-    override fun getItemCount(): Int {
-        TODO("Not yet implemented")
-    }
+    //현재 달 총 날짜 수
+    override fun getItemCount(): Int = dataList.size
 
+
+    //뷰에 데이터 출력
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        TODO("Not yet implemented")
+        val binding = (holder as CalendarViewHolder).binding
+        //첫날짜
+        val firstDateIndex = moaCalendar.prevTail
+        //마지막 날짜
+        val lastDateIndex = dataList.size - moaCalendar.nextHead - 1
+        //Log.d("ju","$firstDateIndex, $lastDateIndex")
+        //뷰에 데이터 출략 -> 닐짜출력, 감정 상태 설정
+        Log.d("ju","datalist : ${dataList[position]}")
+        binding.calendarDate.text = dataList[position].toString()
+
+        //현재 달에 속하지 않는 날짜 (이전달의 tail, 다음달의 head)는 회색 처리
+        if(position < firstDateIndex || position > lastDateIndex) {
+            binding.calendarDate.isVisible = false
+            binding.colors.isVisible = false
+        }
     }
 
 }

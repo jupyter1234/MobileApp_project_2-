@@ -12,11 +12,10 @@
         android:layout_height="62dp"
         android:orientation="vertical">
         <TextView
-            android:id="@+id/date"
+            android:id="@+id/calendarDate"
             android:fontFamily="@font/po_ggoma"
             android:layout_width="7dp"
             android:layout_height="18dp"
-            android:text="1"
             android:textAppearance="@style/date"
             android:layout_gravity="center"
             />
