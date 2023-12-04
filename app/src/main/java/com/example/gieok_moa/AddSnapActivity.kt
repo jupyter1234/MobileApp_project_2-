@@ -1,28 +1,31 @@
 package com.example.gieok_moa
 
 import android.content.Context
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Spinner
+import android.widget.RadioButton
+import android.widget.RadioGroup
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.room.PrimaryKey
-import com.example.gieok_moa.databinding.ActivityMainBinding
 import com.example.gieok_moa.databinding.AddSnapPageBinding
+import com.example.gieok_moa.databinding.AddtagDialogBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.text.FieldPosition
 import java.util.Date
 
 class AddSnapActivity : AppCompatActivity() {
 
-    lateinit var datas: List<com.example.gieok_moa.Tag>
+    lateinit var Tagdatas: List<com.example.gieok_moa.Tag>
+    lateinit var tagList:MutableList<com.example.gieok_moa.Tag>
     lateinit var snapdatas: List<Snap>
+    lateinit var selectedTag:com.example.gieok_moa.Tag
+
+    val zero:Int=0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -35,14 +38,22 @@ class AddSnapActivity : AppCompatActivity() {
         //db생성시 code
         val db = UserDatabase.getInstance(currentContext.applicationContext)
         val loading = CoroutineScope(Dispatchers.IO).launch {
-            datas = db!!.tagDao().getAll()
+            Tagdatas = db!!.tagDao().getAll()
         }
         runBlocking {
             loading.join()
         }
 
+        tagList= mutableListOf()
+        tagList.add(Tag(zero.toLong(),"행복",Color.RED,zero.toLong()))
+        for (i in 0..Tagdatas.size-1){
+            if(Tagdatas[i].ownedSnapID==zero.toLong())
+                tagList.add(Tagdatas[i])
+        }
+
+
         //Log.d("park",datas[0].staus)
-        var spinnerAdapterTag=TagSpinnerAdapter(this, R.layout.item_spinner, datas)
+        var spinnerAdapterTag=TagSpinnerAdapter(this, R.layout.item_spinner, tagList)
 
         binding.tagSpinner.adapter=spinnerAdapterTag
         Log.d("park","success3")
@@ -50,7 +61,14 @@ class AddSnapActivity : AppCompatActivity() {
         binding.tagSpinner.onItemSelectedListener= object : AdapterView.OnItemSelectedListener {
             override fun onItemSelected(parent: AdapterView<*>, view: View?, position: Int, id: Long) {
                 // 선택된 항목의 값 가져오기
-                val selectedItem = parent.getItemAtPosition(position)
+                val selectedItem: Any? = parent.getItemAtPosition(position)
+
+                // Tag 클래스로 캐스팅
+                if (selectedItem is com.example.gieok_moa.Tag) {
+                    selectedTag= selectedItem
+                    // 이제 selectedTag를 사용할 수 있습니다.
+                    // 예: selectedTag.getName(), selectedTag.getId() 등
+                }
 
             }
 
@@ -75,17 +93,78 @@ class AddSnapActivity : AppCompatActivity() {
             var usercomment=binding.edittext.text.toString()
             if(usercomment==null) usercomment=""
 
-            val snapid=snapdatas[snapdatas.size-1].snapId+1
+            var snapid: Long = 1
+            if (snapdatas != null && snapdatas.isNotEmpty()) {
+                snapid = Tagdatas.last().tagID + 1
+            }
             CoroutineScope(Dispatchers.IO).launch{
                 val snap1 = Snap(snapid.toLong(), date, imageUri.toString(), usercomment)
                 db!!.snapDao().insertAll(snap1)
             }
+
+            //고유 SANPID를 가진 TAG로 저장
+            val newSanpandTagpair=selectedTag
+            newSanpandTagpair.ownedSnapID=Tagdatas[Tagdatas.size-1].ownedSnapID+1
+            if(newSanpandTagpair.ownedSnapID==null) newSanpandTagpair.ownedSnapID=1
+            CoroutineScope(Dispatchers.IO).launch{
+                db!!.tagDao().insertAll(newSanpandTagpair)
+            }
+
             Log.d("park",usercomment)
             finish()
         }
-        binding.addtag.setOnClickListener {
 
+        binding.addtag.setOnClickListener {
+            var tagid: Long = 1
+            if (Tagdatas != null && Tagdatas.isNotEmpty()) {
+                tagid = Tagdatas.last().tagID + 1
+            }
+
+            val dialogBinding = AddtagDialogBinding.inflate(layoutInflater)
+            val dialog = AlertDialog.Builder(this).run {
+                setView(dialogBinding.root)
+                create()
+            }
+
+
+            dialogBinding.tagsaveBtn.setOnClickListener {
+                // EditText 내용 가져오기
+
+                val editTextContent = dialogBinding.edittext.text.toString()
+                val radioGroup: RadioGroup = dialogBinding.TagradioGroup
+                val checkedRadioButtonId = radioGroup.checkedRadioButtonId
+                lateinit var saveTag:com.example.gieok_moa.Tag
+                if (checkedRadioButtonId != -1) {
+                    // 선택된 라디오 버튼이 있을 때의 동작
+                    val radioButton: RadioButton = dialogBinding.root.findViewById(checkedRadioButtonId)
+
+                    lateinit var tagColor:Color
+                    when(radioButton){
+                        dialogBinding.radioButtonRed->tagColor=Color.RED
+                        dialogBinding.radioButtonGreen->tagColor=Color.GREEN
+                        dialogBinding.radioButtonYellow->tagColor=Color.YELLOW
+                        else->tagColor=Color.RED
+                    }
+                    Log.d("park", "Radio Group ID: $radioButton")
+                    saveTag=Tag(tagid,editTextContent,tagColor,zero.toLong())
+                } else {
+                    // 선택된 라디오 버튼이 없을 때의 동작
+                }
+                CoroutineScope(Dispatchers.IO).launch {
+                    try {
+                        db!!.tagDao().insertAll(saveTag)
+                        tagList.add(saveTag)
+                    } catch (e: Exception) {
+                        Log.e("park", "Error inserting tag: ${e.message}")
+                    }
+                }
+
+                dialog.dismiss()
+            }
+
+            dialog.show()
         }
+
     }
 
 
