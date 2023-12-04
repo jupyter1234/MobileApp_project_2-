@@ -69,6 +69,19 @@ class Stat1Fragment : Fragment() {
         snapViews = binding.recyclerView
         val adapter = StatAdapter(datas)
         snapViews.adapter = adapter
+
+        binding.color1.setOnClickListener {
+            val snaplist = snapsByColor(Color.RED)
+            snapViews.adapter = StatAdapter(snaplist)
+        }
+        binding.color2.setOnClickListener {
+            val snaplist = snapsByColor(Color.YELLOW)
+            snapViews.adapter = StatAdapter(snaplist)
+        }
+        binding.color3.setOnClickListener {
+            val snaplist = snapsByColor(Color.GREEN)
+            snapViews.adapter = StatAdapter(snaplist)
+        }
         return binding.root
     }
 
@@ -116,5 +129,24 @@ class Stat1Fragment : Fragment() {
 
         val adapter = StatAdapter(datas)
         snapViews.adapter = adapter
+    }
+
+    fun snapsByColor(color:Color):MutableList<Snap>{
+        val db = UserDatabase.getInstance(requireContext().applicationContext)//DB선언
+        var datasByColor : MutableList<Snap> = mutableListOf()
+        var tags : MutableList<Tag> = mutableListOf()
+        val loading = CoroutineScope(Dispatchers.IO).launch {
+            tags = db!!.tagDao().getAll().toMutableList()
+        }
+        runBlocking {
+            loading.join()
+        }//데이터 다 가져올 때 까지 wait
+        for (i in datas){
+            if(tags.any { it.ownedSnapID == i.snapId && it.color==color}){
+                datasByColor.add(i)
+            }
+        }
+
+        return datasByColor
     }
 }
