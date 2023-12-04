@@ -38,9 +38,11 @@ class CalendarAdapter(val calendar: Calendar) : RecyclerView.Adapter<RecyclerVie
         //마지막 날짜
         val lastDateIndex = dataList.size - moaCalendar.nextHead - 1
         //Log.d("ju","$firstDateIndex, $lastDateIndex")
-        //뷰에 데이터 출략 -> 닐짜출력, 감정 상태 설정
+        //뷰에 데이터 출력 -> 닐짜출력, 감정 상태 설정
         Log.d("ju","datalist : ${dataList[position]}")
         binding.calendarDate.text = dataList[position].toString()
+        //디비 연동 후 하루 중 가장 많이 쓴 태그 색깔 가져와서 해당하는 색깔 resource 적용하기
+
 
         //현재 달에 속하지 않는 날짜 (이전달의 tail, 다음달의 head)는 회색 처리
         if(position < firstDateIndex || position > lastDateIndex) {

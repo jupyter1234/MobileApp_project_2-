@@ -19,6 +19,7 @@ class MainCalendar : AppCompatActivity() {
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(back)
         title = ""
+
         //어댑터 적용
         binding.viewpager.adapter = InfiniteFragmentPagerAdapter(this)
         binding.viewpager.orientation = ViewPager2.ORIENTATION_VERTICAL
