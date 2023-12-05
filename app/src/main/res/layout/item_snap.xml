@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="13:42"
+            android:text=""
             android:textSize="25dp"
             android:fontFamily="@font/po"
             android:padding="3dp"/>

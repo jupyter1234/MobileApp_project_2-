@@ -12,7 +12,9 @@ class MyAdapter(val datas: MutableList<Snap>, val clickListener: (Snap)->Unit): 
     private lateinit var binding: ItemSnapBinding
     inner class MyViewHolder(val binding: ItemSnapBinding) : RecyclerView.ViewHolder(binding.root){
         fun bind(item: Snap){
-            binding.snapTime.text = SimpleDateFormat("HH:mm").format(item.createdDate)
+            if (item.photoUrl != "android.resource://com.example.gieok_moa/drawable/snap_add_button1") {
+                binding.snapTime.text = SimpleDateFormat("HH:mm").format(item.createdDate)
+            }
             Glide.with(binding.root)
                 .load(item.photoUrl.toUri())
                 .into(binding.snapImage)

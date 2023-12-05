@@ -152,7 +152,6 @@ class ImageLoadingExplain {
             val snap1 = Snap(i.toLong(), Date(), imageUri.toString(), "")
             db!!.snapDao().insertAll(snap1)
             }
-
         }
     }
 
