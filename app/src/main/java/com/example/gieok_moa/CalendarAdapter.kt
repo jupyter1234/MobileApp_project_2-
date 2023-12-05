@@ -5,6 +5,7 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gieok_moa.databinding.ListItemCalendarBinding
@@ -57,7 +58,7 @@ class CalendarAdapter(val calendar: Calendar, val colorList: List<Int>) : Recycl
                 0 -> binding.colors.setImageResource(R.drawable.red)
                 1 -> binding.colors.setImageResource(R.drawable.yellow)
                 2 -> binding.colors.setImageResource(R.drawable.green)
-                3 -> binding.colors.setImageResource(R.drawable.green)
+                3 -> binding.colors.setImageResource(R.drawable.gray)
             }
         }
 
