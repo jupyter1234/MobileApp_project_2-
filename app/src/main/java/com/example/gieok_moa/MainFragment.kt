@@ -1,10 +1,12 @@
 package com.example.gieok_moa
 
+import android.Manifest
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -33,7 +35,9 @@ import java.io.IOException
 import java.io.OutputStream
 import android.graphics.Color
 import android.provider.MediaStore
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat
+import androidx.core.content.ContextCompat
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -43,12 +47,19 @@ private const val ARG_PARAM2 = "param2"
  * Use the [MainFragment.newInstance] factory method to
  * create an instance of this fragment.
  */
+
+//lateinit var imageUri: Uri?
 class MainFragment : Fragment() {
     // TODO: Rename and change types of parameters
     private var param1: String? = null
     private var param2: String? = null
 
     private val REQUEST_IMAGE_CAPTURE = 1
+
+    private val PICK_IMAGE_REQUEST = 1  // 갤러리에서 이미지를 선택하는 요청 코드
+    private lateinit var binding: FragmentMainBinding // 바인딩 클래스 인스턴스
+
+    private lateinit var datas: MutableList<Snap>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -62,7 +73,7 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val binding = FragmentMainBinding.inflate(inflater, container, false)
+        binding = FragmentMainBinding.inflate(inflater, container, false)
 
         // loading current date
         val currentDate = SimpleDateFormat("MM/dd").format(Date())
@@ -81,7 +92,7 @@ class MainFragment : Fragment() {
 
         // db 불러오기
         val db = UserDatabase.getInstance(requireContext().applicationContext)
-        var datas: MutableList<Snap> = mutableListOf()
+        datas = mutableListOf()
         val loading = CoroutineScope(Dispatchers.IO).launch {
             datas = db!!.snapDao().getAll().toMutableList()
         }
@@ -91,13 +102,11 @@ class MainFragment : Fragment() {
 
         val snapAddImageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button1"
         val snapAddButton: Snap = Snap(0.toLong(), Date(), snapAddImageUrl, "")
-        //datas.add(snapAddButton)
+        datas.add(snapAddButton)
         // insert "add snap button" to database
         CoroutineScope(Dispatchers.IO).launch {
             db!!.snapDao().insertAll(snapAddButton)
         }
-
-        // 데이터 정렬 함수 추가
 
         val layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.layoutManager = layoutManager
@@ -112,16 +121,19 @@ class MainFragment : Fragment() {
                     setView(selectionDialog.root)
                     selectionDialog.takePic.setOnClickListener {
                         // move to Camera App
-                        Log.d("test", "take a picture")
                         //dispatchTakePictureIntent()
-                        
+
                         val intent1=Intent(activity, AddSnapActivity::class.java)
                         startActivity(intent1)
                     }
                     selectionDialog.fromGal.setOnClickListener {
                         // move to Gallery App
-                        pickImageFromGallery()
-                        Log.d("test", "move to gallery")
+                        if (hasReadExternalStoragePermission()) {
+                            openGallery()
+                        } else {
+                            // 권한이 없으면 권한 요청
+                            requestReadExternalStoragePermission()
+                        }
                         val intent1=Intent(activity, AddSnapActivity::class.java)
                         startActivity(intent1)
                     }
@@ -203,79 +215,65 @@ class MainFragment : Fragment() {
             }
     }
 
-    //2
-    private lateinit var imageUri: Uri
+    private fun openGallery() {
+        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST)
+    }
 
-    //갤러리 인텐트 실행해서 사진 선택하면, 내부저장소에 저장하라는 명령어 실행 후, 룸 데이터베이스에 snap 저장
-    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
-        if (uri != null) {
-            imageUri = uri
-            // Store the image in internal storage
-            storeImageInInternalStorage(uri)?.let { storedImageUri ->
-                // Store the URI of the stored image in the Room database
-                storeImageUriInRoomDatabase(storedImageUri)
+    // 권한이 부여되어 있는지 확인하는 메서드
+    private fun hasReadExternalStoragePermission(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext().applicationContext,
+            Manifest.permission.READ_EXTERNAL_STORAGE
+        ) == PackageManager.PERMISSION_GRANTED
+    }
 
+    // 권한 요청 메서드
+    private fun requestReadExternalStoragePermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
+            PICK_IMAGE_REQUEST
+        )
+    }
+
+    // 권한 요청 결과 처리
+    override fun onRequestPermissionsResult(
+        requestCode: Int,
+        permissions: Array<out String>,
+        grantResults: IntArray
+    ) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        when (requestCode) {
+            PICK_IMAGE_REQUEST -> {
+                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // 권한이 부여되면 갤러리 열기
+                    openGallery()
+                } else {
+                    // 권한이 거부되면 사용자에게 알림 등을 표시할 수 있음
+                    // 필요에 따라 처리하세요
+                }
             }
         }
     }
 
-    private fun pickImageFromGallery() {
-        pickImageLauncher.launch("image/*")
-    }
+    // 갤러리에서 이미지를 선택한 후 호출되는 콜백 메서드
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
 
-    //내부 저장소에 image.jpg라는 이름으로 저장 후 실행
-    //fileName 저장할 때 마다 바꿔서 저장하게 변경하기
-    private fun storeImageInInternalStorage(imageUri: Uri): Uri? {
-        val inputStream = requireContext().contentResolver.openInputStream(imageUri)
-        val fileName = "image.jpg"
-        val outputStream: OutputStream
+        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
+            // 선택한 이미지의 URI를 가져옴
+            //imageUri = data.data
 
-        try {
-            val internalStorageDir = requireContext().filesDir
-            val internalStorageFile = File(internalStorageDir, fileName)
-            outputStream = FileOutputStream(internalStorageFile)
-
-            val buffer = ByteArray(4 * 1024)
-            var bytesRead: Int
-            while (inputStream?.read(buffer).also { bytesRead = it!! } != -1) {
-                outputStream.write(buffer, 0, bytesRead)
-            }
-
-            outputStream.flush()
-            outputStream.close()
-            inputStream?.close()
-
-            return Uri.fromFile(internalStorageFile)
-        } catch (e: IOException) {
-            e.printStackTrace()
-        }
-
-        return null
-    }
-
-    //DB에 Snap저장, 지금은 무작위 tag도 만들어서 tag도 저장
-//    private fun storeImageUriInRoomDatabase(imageUri: Uri) {
-//        val db = UserDatabase.getInstance(requireContext().applicationContext)
-//
-//        CoroutineScope(Dispatchers.IO).launch {
-//            for(i in 1..10){
-//                val snap1 = Snap(i.toLong(), Date(), imageUri.toString(), "")
-//                val tag1 = Tag(i.toLong(), arrayOf("t1","t2","t3","t4").random(), arrayOf(Color.GREEN,Color.RED,Color.YELLOW).random(), i.toLong())
-//                db!!.snapDao().insertAll(snap1)
-//                db.tagDao().insertAll(tag1)
+//            val db = UserDatabase.getInstance(requireContext().applicationContext)
+//            for(snap in db!!.snapDao().getAll()) {
+//                if (snap.photoUrl == imageUri.toString())
+//                    datas.add(datas.size-1, snap)
 //            }
-//        }
-//    }
-    private fun storeImageUriInRoomDatabase(imageUri: Uri) {
-
-        val db = UserDatabase.getInstance(requireContext().applicationContext)
-
-        CoroutineScope(Dispatchers.IO).launch {
-            val snap = Snap(1.toLong(), Date(), imageUri.toString(), "arbitrary image")
-            db!!.snapDao().insertAll(snap)
         }
     }
 
+    //2
     // 카메라 관련 코드
 //    private fun dispatchTakePictureIntent() {
 //        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)

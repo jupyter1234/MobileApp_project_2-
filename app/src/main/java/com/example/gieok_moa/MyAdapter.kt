@@ -2,10 +2,16 @@ package com.example.gieok_moa
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
+import androidx.core.graphics.drawable.toDrawable
 import androidx.core.net.toUri
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.gieok_moa.databinding.ItemSnapBinding
+import com.example.gieok_moa.databinding.ItemSpinnerBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 
 class MyAdapter(val datas: MutableList<Snap>, val clickListener: (Snap)->Unit): RecyclerView.Adapter<RecyclerView.ViewHolder>(){
@@ -18,7 +24,6 @@ class MyAdapter(val datas: MutableList<Snap>, val clickListener: (Snap)->Unit): 
             Glide.with(binding.root)
                 .load(item.photoUrl.toUri())
                 .into(binding.snapImage)
-            // add tag...
         }
     }
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -28,6 +33,24 @@ class MyAdapter(val datas: MutableList<Snap>, val clickListener: (Snap)->Unit): 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val item = datas[position]
         (holder as MyViewHolder).bind(item)
+
+        if (item.photoUrl != "android.resource://com.example.gieok_moa/drawable/snap_add_button1"){
+            val binding = (holder as MyViewHolder).binding
+            val db = UserDatabase.getInstance(holder.itemView.context)
+            CoroutineScope(Dispatchers.IO).launch {
+                val tags = db!!.tagDao().getAll()
+                for (tag in tags){
+                    if (tag.ownedSnapID == item.snapId){
+                        binding.tag.text = tag.staus
+                        binding.tag.background = when (tag.color) {
+                            Color.RED -> R.drawable.red_blur_background.toDrawable()
+                            Color.GREEN -> R.drawable.green_blur_background.toDrawable()
+                            Color.YELLOW -> R.drawable.yellow_blur_background.toDrawable()
+                        }
+                    }
+                }
+            }
+        }
 
         binding.root.setOnClickListener {
             clickListener(item)

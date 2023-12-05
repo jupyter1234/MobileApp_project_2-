@@ -11,23 +11,35 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:orientation="vertical">
+
         <TextView
             android:id="@+id/snap_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text=""
-            android:textSize="25dp"
             android:fontFamily="@font/po"
-            android:padding="3dp"/>
+            android:padding="3dp"
+            android:text=""
+            android:textSize="25dp" />
         <ImageView
             android:id="@+id/snap_image"
             android:layout_width="200dp"
             android:layout_height="200dp"/>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+<!--        <ImageView-->
+<!--            android:id="@+id/tag_image"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"/>-->
+        <TextView
+            android:id="@+id/tag"
+            android:layout_width="43dp"
+            android:layout_height="26dp"
+            android:background="@drawable/red_blur_background"
+            android:text="행복"
+            android:gravity="center"
+            android:fontFamily="@font/po"
+            android:layout_gravity="center_horizontal"/>
+
     </LinearLayout>
 
 </LinearLayout>
