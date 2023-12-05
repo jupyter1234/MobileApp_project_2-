@@ -23,6 +23,6 @@
             android:id="@+id/colors"
             android:layout_width="34dp"
             android:layout_height="34dp"
-            android:src="@drawable/colors" />
+            android:src="@drawable/green" />
     </LinearLayout>
 </LinearLayout>

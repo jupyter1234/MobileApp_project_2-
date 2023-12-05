@@ -15,7 +15,7 @@ import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
 
-class CalendarAdapter(val context: Context,val calendar: Calendar) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CalendarAdapter(val calendar: Calendar, val colorList: List<Int>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class CalendarViewHolder(val binding: ListItemCalendarBinding) : RecyclerView.ViewHolder(binding.root)
     var dataList: ArrayList<Int> = arrayListOf()
 
@@ -51,6 +51,15 @@ class CalendarAdapter(val context: Context,val calendar: Calendar) : RecyclerVie
         Log.d("ju","datalist : ${dataList[position]}")
         binding.calendarDate.text = dataList[position].toString()
         //디비 연동 후 하루 중 가장 많이 쓴 태그 색깔 가져와서 해당하는 색깔 resource 적용하기
+        // -> colorList [빨, 노, 초]
+        if (position in firstDateIndex..lastDateIndex){
+            when(colorList[position-firstDateIndex]){
+                0 -> binding.colors.setImageResource(R.drawable.red)
+                1 -> binding.colors.setImageResource(R.drawable.yellow)
+                2 -> binding.colors.setImageResource(R.drawable.green)
+                3 -> binding.colors.setImageResource(R.drawable.green)
+            }
+        }
 
 
         //현재 달에 속하지 않는 날짜 (이전달의 tail, 다음달의 head)는 회색 처리

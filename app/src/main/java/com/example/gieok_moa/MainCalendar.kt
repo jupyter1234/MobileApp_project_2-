@@ -48,9 +48,9 @@ class MainCalendar : AppCompatActivity() {
             val snap3 = Snap(createdDate = Date(),photoUrl = imageUri.toString(),comment = "03")
             db!!.snapDao().insertAll(snap1,snap2,snap3)
 
-            val tag1 = Tag(snap1.snapId, "good",Color.GREEN)
-            val tag2 = Tag(snap2.snapId, "bad",Color.RED)
-            val tag3 = Tag(snap3.snapId, "bad",Color.RED)
+            val tag1 = Tag(snap1.snapId, "soso",Color.YELLOW,snap1.snapId)
+            val tag2 = Tag(snap2.snapId, "soso",Color.YELLOW,snap2.snapId)
+            val tag3 = Tag(snap3.snapId, "soso",Color.YELLOW,snap3.snapId)
             db!!.tagDao().insertAll(tag1,tag2,tag3)
         }
 
