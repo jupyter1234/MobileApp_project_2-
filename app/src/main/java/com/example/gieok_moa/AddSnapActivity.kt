@@ -1,6 +1,9 @@
 package com.example.gieok_moa
 
 import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -10,6 +13,7 @@ import android.widget.RadioGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
+import com.bumptech.glide.Glide
 import com.example.gieok_moa.databinding.AddSnapPageBinding
 import com.example.gieok_moa.databinding.AddtagDialogBinding
 import kotlinx.coroutines.CoroutineScope
@@ -18,12 +22,14 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Date
 
+
 class AddSnapActivity : AppCompatActivity() {
 
     lateinit var Tagdatas: List<com.example.gieok_moa.Tag>
     lateinit var tagList:MutableList<com.example.gieok_moa.Tag>
     lateinit var snapdatas: List<Snap>
     lateinit var selectedTag:com.example.gieok_moa.Tag
+
 
     val zero:Int=0
 
@@ -32,6 +38,13 @@ class AddSnapActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding= AddSnapPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        Log.d("park",MainFragment.imageUri.toString())
+        Glide.with(binding.root)
+            .load(MainFragment.imageUri)
+            .into(binding.addimage)
+
+
 
 
         val currentContext: Context = this
@@ -45,7 +58,6 @@ class AddSnapActivity : AppCompatActivity() {
         }
 
         tagList= mutableListOf()
-        tagList.add(Tag(zero.toLong(),"행복",Color.RED,zero.toLong()))
         for (i in 0..Tagdatas.size-1){
             if(Tagdatas[i].ownedSnapID==zero.toLong())
                 tagList.add(Tagdatas[i])
@@ -89,7 +101,7 @@ class AddSnapActivity : AppCompatActivity() {
             }
 
             val date= Date()
-            val imageUri = "".toUri()
+            val imageUri = MainFragment.imageUri
             var usercomment=binding.edittext.text.toString()
             if(usercomment==null) usercomment=""
 
@@ -104,8 +116,8 @@ class AddSnapActivity : AppCompatActivity() {
 
             //고유 SANPID를 가진 TAG로 저장
             val newSanpandTagpair=selectedTag
-            newSanpandTagpair.ownedSnapID=Tagdatas[Tagdatas.size-1].ownedSnapID+1
-            if(newSanpandTagpair.ownedSnapID==null) newSanpandTagpair.ownedSnapID=1
+            newSanpandTagpair.ownedSnapID=snapid.toLong()
+
             CoroutineScope(Dispatchers.IO).launch{
                 db!!.tagDao().insertAll(newSanpandTagpair)
             }
@@ -122,10 +134,12 @@ class AddSnapActivity : AppCompatActivity() {
 
             val dialogBinding = AddtagDialogBinding.inflate(layoutInflater)
             val dialog = AlertDialog.Builder(this).run {
+
                 setView(dialogBinding.root)
                 create()
             }
-
+            dialog.window?.setBackgroundDrawable(ColorDrawable(android.graphics.Color.TRANSPARENT))
+            dialog.window?.setLayout(180, 170)
 
             dialogBinding.tagsaveBtn.setOnClickListener {
                 // EditText 내용 가져오기
@@ -134,22 +148,17 @@ class AddSnapActivity : AppCompatActivity() {
                 val radioGroup: RadioGroup = dialogBinding.TagradioGroup
                 val checkedRadioButtonId = radioGroup.checkedRadioButtonId
                 lateinit var saveTag:com.example.gieok_moa.Tag
-                if (checkedRadioButtonId != -1) {
-                    // 선택된 라디오 버튼이 있을 때의 동작
-                    val radioButton: RadioButton = dialogBinding.root.findViewById(checkedRadioButtonId)
+                val radioButton: RadioButton = dialogBinding.root.findViewById(checkedRadioButtonId)
 
-                    lateinit var tagColor:Color
-                    when(radioButton){
-                        dialogBinding.radioButtonRed->tagColor=Color.RED
-                        dialogBinding.radioButtonGreen->tagColor=Color.GREEN
-                        dialogBinding.radioButtonYellow->tagColor=Color.YELLOW
-                        else->tagColor=Color.RED
-                    }
-                    Log.d("park", "Radio Group ID: $radioButton")
-                    saveTag=Tag(tagid,editTextContent,tagColor,zero.toLong())
-                } else {
-                    // 선택된 라디오 버튼이 없을 때의 동작
+                lateinit var tagColor:Color
+                when(radioButton){
+                    dialogBinding.radioButtonRed->tagColor=Color.RED
+                    dialogBinding.radioButtonGreen->tagColor=Color.GREEN
+                    dialogBinding.radioButtonYellow->tagColor=Color.YELLOW
+                    else->tagColor=Color.RED
                 }
+                Log.d("park", "Radio Group ID: $radioButton")
+                saveTag=Tag(tagid,editTextContent,tagColor,zero.toLong())
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
                         db!!.tagDao().insertAll(saveTag)
@@ -166,6 +175,8 @@ class AddSnapActivity : AppCompatActivity() {
         }
 
     }
+
+
 
 
 
