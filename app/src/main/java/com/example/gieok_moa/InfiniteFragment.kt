@@ -65,51 +65,26 @@ class InfiniteFragment : Fragment() {
             loading.join()
         }
 
-
-        Log.d("snap","snapdata : $snapDatas")
-
         Log.d("ju","${pageIndex}")
         val binding = FragmentInfiniteBinding.inflate(inflater,container,false)
         // 페이지 인덱스마다 보여 줄 달 설정
         val currentCalendar = Calendar.getInstance().apply {
             add(Calendar.MONTH, (pageIndex - Int.MAX_VALUE / 2))
         }
-        //db
-        fun getTagsByDate(start: Calendar,end: Calendar):List<Tag>{
-            val db = UserDatabase.getInstance(requireContext().applicationContext)
-            lateinit var snaps : MutableList<Snap>
-            lateinit var tags: MutableList<Tag>
-            val loading = CoroutineScope(Dispatchers.IO).launch {
-                snaps = db!!.snapDao().getAll().toMutableList()
-                tags = db.tagDao().getAll().toMutableList()
-            }
-            runBlocking {
-                loading.join()
-            }//데이터 다 가져올 때 까지 wait
 
-            snaps.removeIf {it.createdDate.time < start.time.time || it.createdDate.time >= end.time.time }
-            tags.removeIf {
-                val i = it.ownedSnapID
-                snaps.any { it.snapId == i }}
+        //해당 달에 해당하는 태그의 각 날짜별로 색깔 카운트하기
+        val colorList:List<Int> = getScoreList(db, currentCalendar)
+        Log.d("tag","$colorList")
+        //해당 달에 해당하는 태그 가져오기
+//        val tagsByDate:List<Tag> = getTagsOfMonth(currentCalendar)
+//        Log.d("tags","$tagsByDate")
+        //[Tag(tagID=4, staus=good, color=GREEN, ownedSnapID=0),...]
 
-            return tags.toList()
-        }
-
-        fun getTagsOfMonth():List<Tag>{
-            val start = currentCalendar
-            start.set(Calendar.DAY_OF_MONTH, 1)
-            start.set(Calendar.HOUR_OF_DAY, 0)
-            start.set(Calendar.MINUTE, 0)
-            start.set(Calendar.SECOND, 0)
-            start.set(Calendar.MILLISECOND, 0)
-            val end = (start.clone() as Calendar)
-            end.add(Calendar.MONTH, 1)
-            return getTagsByDate(start, end)
-        }
         //이동한 페이지의 첫번째 날짜 선택 -> 이 날짜로 캘린더 만들어야됨
         // val date = currentCalendar.get(Calendar.TIME)
 
         val currentYear = currentCalendar.get(Calendar.YEAR)
+        //1 더해야 올바른 값임
         val currentMonth = currentCalendar.get(Calendar.MONTH) + 1
 
         // 이전 월 계산
@@ -133,12 +108,63 @@ class InfiniteFragment : Fragment() {
         binding.nextmonth.text = nextMonth.toString() + "월"
 
         //날짜 표시를 위한 recyclerview 등록
-        binding.daysItem.adapter = CalendarAdapter(currentCalendar)
+        binding.daysItem.adapter = CalendarAdapter(requireContext(),currentCalendar)
         binding.daysItem.layoutManager = GridLayoutManager(this.context,7)
         return binding.root
     }
     override fun onDestroy() {
         super.onDestroy()
         instance = null
+    }
+
+    //해달 달의 태그 가져오기
+    fun getTagsByDate(db: UserDatabase?,start: Calendar,end: Calendar):List<Tag>{
+        lateinit var snaps : MutableList<Snap>
+        lateinit var tags: MutableList<Tag>
+        val loading = CoroutineScope(Dispatchers.IO).launch {
+            snaps = db!!.snapDao().getAll().toMutableList()
+            tags = db!!.tagDao().getAll().toMutableList()
+        }
+        runBlocking {
+            loading.join()
+        }//데이터 다 가져올 때 까지 wait
+
+        snaps.removeIf {it.createdDate.time < start.time.time || it.createdDate.time >= end.time.time }
+        tags.removeIf {
+            val i = it.ownedSnapID
+            snaps.any { it.snapId != i }}
+
+        return tags.toList()
+    }
+
+    //달의 시작 세팅
+    fun getTagsOfMonth(db: UserDatabase?,currentCalendar:Calendar):List<Tag>{
+        //스크롤반영한 현재 달력
+        val start = currentCalendar
+        start.set(Calendar.DAY_OF_MONTH, 1)
+        start.set(Calendar.HOUR_OF_DAY, 0)
+        start.set(Calendar.MINUTE, 0)
+        start.set(Calendar.SECOND, 0)
+        start.set(Calendar.MILLISECOND, 0)
+        val end = (start.clone() as Calendar)
+        end.add(Calendar.MONTH, 1)
+        return getTagsByDate(db,start, end)
+    }
+
+    //태그 컬러별로 카운트해서 가져오기
+    fun getScoreList(db: UserDatabase?, currentCalendar: Calendar):List<Int> {
+
+        val currentMonth = currentCalendar.get(Calendar.MONTH) + 1
+        Log.d("tags","$currentMonth 에 들어옴")
+        val tag2List = getTagsOfMonth(db,currentCalendar)
+        val colorList = mutableListOf<Int>(0,0,0)
+        for(i in tag2List){
+            when(i.color){
+                Color.RED->colorList[0]+=1
+                Color.YELLOW->colorList[1]+=1
+                Color.GREEN->colorList[2]+=1
+            }
+        }
+        return colorList
     }
 }

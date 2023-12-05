@@ -33,7 +33,7 @@ class MainCalendar : AppCompatActivity() {
         //위 아래로 무한대 스크롤 가능
         binding.viewpager.setCurrentItem((Int.MAX_VALUE /2), false)
 
-        makeDummy()
+        //makeDummy()
     }
 
     fun makeDummy(){

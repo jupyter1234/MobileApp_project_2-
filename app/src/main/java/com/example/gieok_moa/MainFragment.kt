@@ -74,7 +74,7 @@ class MainFragment : Fragment() {
             datas = db!!.snapDao().getAll().toMutableList()
         }
 
-        deleteTemps()
+        //deleteTemps()
         val imageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button1"
         val snapAddButton: Snap = Snap(0, Date(), imageUrl)
         val snapEx = Snap(1, Date(),

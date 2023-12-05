@@ -1,15 +1,21 @@
 package com.example.gieok_moa
 
+import android.content.Context
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gieok_moa.databinding.ListItemCalendarBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
 
-class CalendarAdapter(val calendar: Calendar) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class CalendarAdapter(val context: Context,val calendar: Calendar) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class CalendarViewHolder(val binding: ListItemCalendarBinding) : RecyclerView.ViewHolder(binding.root)
     var dataList: ArrayList<Int> = arrayListOf()
 
@@ -19,6 +25,7 @@ class CalendarAdapter(val calendar: Calendar) : RecyclerView.Adapter<RecyclerVie
         moaCalendar.initBaseCalendar()
         dataList = moaCalendar.dateList
     }
+
 
     //날짜 클릭 기능은 나중에 구현하기
 
@@ -33,13 +40,14 @@ class CalendarAdapter(val calendar: Calendar) : RecyclerView.Adapter<RecyclerVie
     //뷰에 데이터 출력
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as CalendarViewHolder).binding
-
         //첫날짜
         val firstDateIndex = moaCalendar.prevTail
         //마지막 날짜
         val lastDateIndex = dataList.size - moaCalendar.nextHead - 1
         //Log.d("ju","$firstDateIndex, $lastDateIndex")
         //뷰에 데이터 출력 -> 닐짜출력, 감정 상태 설정
+
+
         Log.d("ju","datalist : ${dataList[position]}")
         binding.calendarDate.text = dataList[position].toString()
         //디비 연동 후 하루 중 가장 많이 쓴 태그 색깔 가져와서 해당하는 색깔 resource 적용하기
