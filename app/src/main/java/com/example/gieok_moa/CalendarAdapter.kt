@@ -33,6 +33,7 @@ class CalendarAdapter(val calendar: Calendar) : RecyclerView.Adapter<RecyclerVie
     //뷰에 데이터 출력
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as CalendarViewHolder).binding
+
         //첫날짜
         val firstDateIndex = moaCalendar.prevTail
         //마지막 날짜
@@ -50,5 +51,4 @@ class CalendarAdapter(val calendar: Calendar) : RecyclerView.Adapter<RecyclerVie
             binding.colors.isVisible = false
         }
     }
-
 }

@@ -1,9 +1,15 @@
 package com.example.gieok_moa
 
+import androidx.core.content.ContentProviderCompat.requireContext
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.util.Calendar
 import java.util.Date
 
 class MoaCalendar(currentCalendar: Calendar) {
+    //snap 저장할 배열
+    lateinit var datas: MutableList<Snap>
     companion object {
         const val DAYS_OF_WEEK = 7
         const val LOW_OF_CALENDAR = 5
@@ -20,6 +26,9 @@ class MoaCalendar(currentCalendar: Calendar) {
 
     //해당 달 날짜 기록할 배열
     var dateList = arrayListOf<Int>()
+
+    //해당 달 날짜 태그 색깔 기록할 배열
+    var top_colors = arrayListOf<Int>()
 
 //    init {
 //        calendar.time = date
@@ -44,6 +53,7 @@ class MoaCalendar(currentCalendar: Calendar) {
 
         nextHead = LOW_OF_CALENDAR * DAYS_OF_WEEK - (prevTail + currentMaxDate)
         makeNextHead()
+
     }
 
     private fun makePrevTail(calendar: Calendar) {

@@ -11,6 +11,8 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContentProviderCompat
+import androidx.core.net.toUri
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider.NewInstanceFactory.Companion.instance
 import androidx.recyclerview.widget.GridLayoutManager
@@ -19,6 +21,12 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.adapter.FragmentViewHolder
 import androidx.viewpager2.widget.ViewPager2
 import com.example.gieok_moa.databinding.FragmentInfiniteBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.currentCoroutineContext
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import org.jetbrains.annotations.TestOnly
 import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Currency
@@ -42,11 +50,61 @@ class InfiniteFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
+        val currentContext: Context = this.requireContext()
+
+        //snap 저장할 배열
+        lateinit var snapDatas: MutableList<Snap>
+        //디비 가져오기
+        val db = UserDatabase.getInstance(currentContext.applicationContext)
+        val loading = CoroutineScope(Dispatchers.IO).launch {
+            snapDatas = db!!.snapDao().getAll().toMutableList()
+        }
+
+        //데이터 가져올 때까지 대기
+        runBlocking {
+            loading.join()
+        }
+
+
+        Log.d("snap","snapdata : $snapDatas")
+
         Log.d("ju","${pageIndex}")
         val binding = FragmentInfiniteBinding.inflate(inflater,container,false)
         // 페이지 인덱스마다 보여 줄 달 설정
         val currentCalendar = Calendar.getInstance().apply {
             add(Calendar.MONTH, (pageIndex - Int.MAX_VALUE / 2))
+        }
+        //db
+        fun getTagsByDate(start: Calendar,end: Calendar):List<Tag>{
+            val db = UserDatabase.getInstance(requireContext().applicationContext)
+            lateinit var snaps : MutableList<Snap>
+            lateinit var tags: MutableList<Tag>
+            val loading = CoroutineScope(Dispatchers.IO).launch {
+                snaps = db!!.snapDao().getAll().toMutableList()
+                tags = db.tagDao().getAll().toMutableList()
+            }
+            runBlocking {
+                loading.join()
+            }//데이터 다 가져올 때 까지 wait
+
+            snaps.removeIf {it.createdDate.time < start.time.time || it.createdDate.time >= end.time.time }
+            tags.removeIf {
+                val i = it.ownedSnapID
+                snaps.any { it.snapId == i }}
+
+            return tags.toList()
+        }
+
+        fun getTagsOfMonth():List<Tag>{
+            val start = currentCalendar
+            start.set(Calendar.DAY_OF_MONTH, 1)
+            start.set(Calendar.HOUR_OF_DAY, 0)
+            start.set(Calendar.MINUTE, 0)
+            start.set(Calendar.SECOND, 0)
+            start.set(Calendar.MILLISECOND, 0)
+            val end = (start.clone() as Calendar)
+            end.add(Calendar.MONTH, 1)
+            return getTagsByDate(start, end)
         }
         //이동한 페이지의 첫번째 날짜 선택 -> 이 날짜로 캘린더 만들어야됨
         // val date = currentCalendar.get(Calendar.TIME)
