@@ -1,5 +1,6 @@
 package com.example.gieok_moa
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContentProviderCompat.requireContext
@@ -35,6 +36,7 @@ class MyAdapter(val datas: MutableList<Snap>, val clickListener: (Snap)->Unit): 
         (holder as MyViewHolder).bind(item)
 
         if (item.photoUrl != "android.resource://com.example.gieok_moa/drawable/snap_add_button1"){
+            Log.d("ko", "니뭔데")
             val binding = (holder as MyViewHolder).binding
             val db = UserDatabase.getInstance(holder.itemView.context)
             CoroutineScope(Dispatchers.IO).launch {

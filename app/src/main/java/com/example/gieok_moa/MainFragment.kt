@@ -38,6 +38,7 @@ import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.toDrawable
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -103,10 +104,6 @@ class MainFragment : Fragment() {
         val snapAddImageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button1"
         val snapAddButton: Snap = Snap(0.toLong(), Date(), snapAddImageUrl, "")
         datas.add(snapAddButton)
-        // insert "add snap button" to database
-        CoroutineScope(Dispatchers.IO).launch {
-            db!!.snapDao().insertAll(snapAddButton)
-        }
 
         val layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.layoutManager = layoutManager
@@ -128,14 +125,7 @@ class MainFragment : Fragment() {
                     }
                     selectionDialog.fromGal.setOnClickListener {
                         // move to Gallery App
-                        if (hasReadExternalStoragePermission()) {
-                            openGallery()
-                        } else {
-                            // 권한이 없으면 권한 요청
-                            requestReadExternalStoragePermission()
-                        }
-                        val intent1=Intent(activity, AddSnapActivity::class.java)
-                        startActivity(intent1)
+                        openGallery()
                     }
                     show()
                 }
@@ -170,11 +160,6 @@ class MainFragment : Fragment() {
         }
         binding.recyclerView.adapter = adapter
 
-        CoroutineScope(Dispatchers.IO).launch {
-            for(i in db!!.snapDao().getAll()) {
-                db.snapDao().delete(i)
-            }
-        }
         return binding.root
     }
 
@@ -196,6 +181,7 @@ class MainFragment : Fragment() {
     }
 
     companion object {
+        lateinit var imageUri: Uri
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -215,62 +201,30 @@ class MainFragment : Fragment() {
             }
     }
 
-    private fun openGallery() {
-        val galleryIntent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
-        startActivityForResult(galleryIntent, PICK_IMAGE_REQUEST)
-    }
+    private val pickImageLauncher = registerForActivityResult(ActivityResultContracts.GetContent()) { uri: Uri? ->
+        // 사용자가 이미지를 선택한 후의 처리
+        if (uri != null) {
+            Log.d("park", "pick picture")
+            imageUri=uri
+            Log.d("park","Main ${uri.toString()}")
 
-    // 권한이 부여되어 있는지 확인하는 메서드
-    private fun hasReadExternalStoragePermission(): Boolean {
-        return ContextCompat.checkSelfPermission(
-            requireContext().applicationContext,
-            Manifest.permission.READ_EXTERNAL_STORAGE
-        ) == PackageManager.PERMISSION_GRANTED
-    }
+            val intent1=Intent(activity, AddSnapActivity::class.java)
+            startActivity(intent1)
 
-    // 권한 요청 메서드
-    private fun requestReadExternalStoragePermission() {
-        ActivityCompat.requestPermissions(
-            requireActivity(),
-            arrayOf(Manifest.permission.READ_EXTERNAL_STORAGE),
-            PICK_IMAGE_REQUEST
-        )
-    }
-
-    // 권한 요청 결과 처리
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        when (requestCode) {
-            PICK_IMAGE_REQUEST -> {
-                if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // 권한이 부여되면 갤러리 열기
-                    openGallery()
-                } else {
-                    // 권한이 거부되면 사용자에게 알림 등을 표시할 수 있음
-                    // 필요에 따라 처리하세요
+            // add to datas
+            val db = UserDatabase.getInstance(requireContext().applicationContext)
+            CoroutineScope(Dispatchers.IO).launch {
+                for (snap in db!!.snapDao().getAll()){
+                    if (snap.photoUrl == uri.toString()){
+                        datas.add(datas.size-1, snap)
+                        }
+                    }
                 }
             }
         }
-    }
 
-    // 갤러리에서 이미지를 선택한 후 호출되는 콜백 메서드
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-
-        if (requestCode == PICK_IMAGE_REQUEST && resultCode == RESULT_OK && data != null) {
-            // 선택한 이미지의 URI를 가져옴
-            //imageUri = data.data
-
-//            val db = UserDatabase.getInstance(requireContext().applicationContext)
-//            for(snap in db!!.snapDao().getAll()) {
-//                if (snap.photoUrl == imageUri.toString())
-//                    datas.add(datas.size-1, snap)
-//            }
-        }
+    private fun openGallery() {
+        pickImageLauncher.launch("image/*")
     }
 
     //2
@@ -295,28 +249,6 @@ class MainFragment : Fragment() {
 //        }
 //    }
 
-    private fun savePhotoToDatabase(photoUrl: String) {
-        // Implement your Room database insertion logic here
-        // You need to have a Room database set up and a data class representing your entity
-        // For simplicity, I'm assuming you have a PhotoEntity class with a DAO
-        val db = UserDatabase.getInstance(requireContext().applicationContext)
-        val snap = Snap(5L, Date(), photoUrl, "")
-        CoroutineScope(Dispatchers.IO).launch {
-            db!!.snapDao().insertAll(snap)
-        }
-    }
-
-    fun deleteTemps(){
-        val db = UserDatabase.getInstance(requireContext().applicationContext)
-        CoroutineScope(Dispatchers.IO).launch {
-            for(i in db!!.snapDao().getAll()) {
-                db.snapDao().delete(i)
-            }
-            for(i in db.tagDao().getAll()) {
-                db.tagDao().delete(i)
-            }
-        }
-    }
 }
 
 interface OnSnapAddedListener {

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- res/drawable/dialog_background.xml -->
+<shape xmlns:android="http://schemas.android.com/apk/res/android"
+    android:shape="rectangle">
+    <corners android:radius="10dp" /> <!-- 모서리 둥글게 할 크기를 지정하세요 -->
+    <solid android:color="@android:color/white" /> <!-- 배경 색상을 지정하세요 -->
+</shape>
