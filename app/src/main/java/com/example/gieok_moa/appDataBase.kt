@@ -1,6 +1,7 @@
 package com.example.gieok_moa
 
 import android.content.Context
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -8,7 +9,12 @@ import androidx.room.TypeConverter
 import androidx.room.TypeConverters
 import java.util.Date
 
-@Database(entities = arrayOf(User::class, Snap::class, Tag::class), version = 1)
+//@Database(entities = arrayOf(User::class, Snap::class, Tag::class), version = 1)
+@Database(
+    version = 2,
+    entities = arrayOf(User::class, Snap::class, Tag::class),
+    autoMigrations = [AutoMigration (from = 1, to = 2)],
+    exportSchema = true)
 @TypeConverters(
     value = [
         Converters::class,

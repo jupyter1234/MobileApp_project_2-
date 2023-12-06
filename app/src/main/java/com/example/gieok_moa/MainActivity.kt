@@ -8,7 +8,7 @@ import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gieok_moa.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity(), OnSnapAddedListener {
+class MainActivity : AppCompatActivity(), OnSnapChangeListener {
 
     class MainFragmentPagerAdapter(activity: FragmentActivity) :
         FragmentStateAdapter(activity) {
@@ -32,7 +32,7 @@ class MainActivity : AppCompatActivity(), OnSnapAddedListener {
         binding.viewPager.adapter = adapter
     }
 
-    override fun onSnapAdded() {
+    override fun onSnapChange() {
         val stat1Fragment = adapter.fragments[1] as Stat1Fragment
         stat1Fragment.updateStat1()
         val stat2Fragment = adapter.fragments[2] as Stat2Fragment

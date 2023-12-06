@@ -63,7 +63,7 @@ class Stat1Fragment : Fragment() {
         endOfDay.add(Calendar.HOUR_OF_DAY, 24)
         datas.removeIf {it.createdDate.time < startOfDay.time.time || it.createdDate.time >= endOfDay.time.time }
 
-        val layoutManager = GridLayoutManager(activity, 2)
+        val layoutManager = GridLayoutManager(activity, 3)
         binding.recyclerView.layoutManager = layoutManager
 
         snapViews = binding.recyclerView

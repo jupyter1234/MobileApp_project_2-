@@ -248,7 +248,7 @@ class Stat2Fragment : Fragment() {
         snaps.removeIf {it.createdDate.time < start.time.time || it.createdDate.time >= end.time.time }
         tags.removeIf {
             val i = it.ownedSnapID
-            snaps.any { it.snapId == i }}
+            !snaps.any { it.snapId == i }}
 
         return tags.toList()
     }

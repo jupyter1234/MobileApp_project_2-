@@ -17,7 +17,6 @@ class StatAdapter(val datas: List<Snap>): RecyclerView.Adapter<RecyclerView.View
         val binding = (holder as MyViewHolder).binding
         val item = datas[position]
 
-
         binding.snapTime.text = SimpleDateFormat("hh:mm").format(item.createdDate)
         Glide.with(binding.root)
             .load(item.photoUrl.toUri())

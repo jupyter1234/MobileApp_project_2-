@@ -12,12 +12,15 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Gieok_moa"
         tools:targetApi="31">
-        <activity android:name=".AddSnapActivity"
-            android:exported="true">
-        </activity>
-        <activity android:name = ".MainCalendar"
-            android:exported="true">
-        </activity>
+        <activity
+            android:name=".SigninActivity"
+            android:exported="false" />
+        <activity
+            android:name=".AddSnapActivity"
+            android:exported="true"></activity>
+        <activity
+            android:name=".MainCalendar"
+            android:exported="true"></activity>
         <activity
             android:name=".MainActivity"
             android:exported="true">

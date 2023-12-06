@@ -1,34 +1,28 @@
 package com.example.gieok_moa
 
 import android.content.Context
-import android.nfc.Tag
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.AdapterView
-import android.widget.Spinner
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.net.toUri
-import androidx.room.PrimaryKey
-import com.example.gieok_moa.databinding.ActivityMainBinding
 import com.example.gieok_moa.databinding.AddSnapPageBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.text.FieldPosition
 import java.util.Date
 
 class AddSnapActivity : AppCompatActivity() {
-
-    lateinit var datas: List<com.example.gieok_moa.Tag>
-    lateinit var snapdatas: List<Snap>
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val binding= AddSnapPageBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        lateinit var datas: List<com.example.gieok_moa.Tag>
+        lateinit var snapdatas: List<Snap>
 
 
         val currentContext: Context = this
@@ -74,12 +68,17 @@ class AddSnapActivity : AppCompatActivity() {
             val imageUri = "".toUri()
             var usercomment=binding.edittext.text.toString()
             if(usercomment==null) usercomment=""
-
-            val snapid=snapdatas[snapdatas.size-1].snapId+1
-            CoroutineScope(Dispatchers.IO).launch{
-                val snap1 = Snap(snapid.toLong(), date, imageUri.toString(), usercomment)
+            val loading2 = CoroutineScope(Dispatchers.IO).launch{
+                val snap1 = Snap(0.toLong(), date, imageUri.toString(), usercomment)
                 db!!.snapDao().insertAll(snap1)
+                val snap_id = db!!.snapDao().getbyDate(date.time)
+                val tag1 = Tag(snap_id[0].snapId, listOf<String>("t1","t2","t3","t4").random(),listOf<Color>(Color.RED,Color.YELLOW,Color.GREEN).random(), snap_id[0].snapId)
+                db!!.tagDao().insertAll(tag1)
             }
+            runBlocking {
+                loading2.join()
+            }//데이터 다 가져올 때 까지 wait
+
             Log.d("park",usercomment)
             finish()
         }

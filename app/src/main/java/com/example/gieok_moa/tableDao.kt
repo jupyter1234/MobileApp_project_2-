@@ -24,6 +24,8 @@ interface userDao {
 interface snapDao {
     @Query("SELECT * FROM snap_table")
     fun getAll() : List<Snap>
+    @Query("SELECT * FROM snap_table where createdDate = :createddate")
+    fun getbyDate(createddate:Long) : List<Snap>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg snap: Snap)
     @Delete
@@ -39,32 +41,4 @@ interface tagDao {
     fun insertAll(vararg tag: Tag)
     @Delete
     fun delete(tag: Tag)
-}
-
-@Dao
-interface snapandTag{
-    @Transaction
-    @Query("SELECT * from snap_table")
-    fun getSnapnTag() : List<snapandTag>
-
-    @Transaction
-    @Query("SELECT * from snap_table where createdDate between :a and :b")
-    fun getSnapnTagbyTime(a : Long, b : Long) : List<snapandTag>
-
-    fun getSnapandTagbyDate(c : Calendar) : List<snapandTag>{
-        val startOfDay = c
-        startOfDay.set(Calendar.HOUR_OF_DAY, 0)
-        startOfDay.set(Calendar.MINUTE, 0)
-        startOfDay.set(Calendar.SECOND, 0)
-        startOfDay.set(Calendar.MILLISECOND, 0)
-        val endOfDay = (startOfDay.clone() as Calendar)
-        endOfDay.add(Calendar.HOUR_OF_DAY, 24)
-        return getSnapnTagbyTime(startOfDay.time.time,endOfDay.time.time)
-    }
-
-    fun getSnapandTagbyDate(d : Date) : List<snapandTag> {
-        val c = Calendar.getInstance()
-        c.setTime(d)
-        return getSnapandTagbyDate(c)
-    }
 }
