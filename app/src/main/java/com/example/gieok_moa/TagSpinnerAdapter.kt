@@ -14,7 +14,7 @@ import com.example.gieok_moa.databinding.ItemSpinnerBinding
 class TagSpinnerAdapter (
     context: Context,
     @LayoutRes private val resId: Int,
-    private val values : List<Tag>
+    private val values : MutableList<Tag>
 ):ArrayAdapter<Tag>(context, resId, values) {
     override fun getCount()=values.size
 
