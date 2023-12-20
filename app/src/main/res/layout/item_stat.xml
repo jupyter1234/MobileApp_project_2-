@@ -15,6 +15,7 @@
         android:textSize="25dp"
         android:fontFamily="@font/poggo"
         android:padding="3dp"/>
+
     <ImageView
         android:id="@+id/snap_image"
         android:layout_width="200dp"

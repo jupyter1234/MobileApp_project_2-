@@ -21,10 +21,13 @@
             android:padding="3dp"
             android:text=""
             android:textSize="25dp" />
+
+
         <ImageView
             android:id="@+id/snap_image"
             android:layout_width="200dp"
             android:layout_height="200dp"/>
+
 <!--        <ImageView-->
 <!--            android:id="@+id/tag_image"-->
 <!--            android:layout_width="wrap_content"-->

@@ -1,38 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="300dp"
     android:layout_height="400dp"
     android:orientation="vertical"
-    android:background="@drawable/dialog_background">
+    android:background="@drawable/dialog_background"
+    >
     <ImageView
-        android:layout_width="wrap_content"
+        android:id="@+id/snapimage"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:id="@+id/snapimage"
         android:src="@drawable/snap_image" />
     <TextView
-        android:layout_marginTop="10dp"
-        android:layout_width="wrap_content"
+        android:id="@+id/snapText"
+        android:layout_width="260dp"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/snapimage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
         android:text="@string/detail"
-        android:layout_marginLeft="19dp"
-        android:layout_alignBottom="@id/snapimage"
         android:textSize="18dp"
         android:fontFamily="@font/po"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="40dp"
         android:gravity="right|bottom"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/settingbutton"
-            android:layout_width="23dp"
-            android:layout_height="23dp"
-            android:layout_margin="10dp"
-            android:src="@drawable/smallsettingbutton"/>
-
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
         <ImageView
             android:id="@+id/trashbutton"
             android:layout_width="23dp"
@@ -42,4 +37,4 @@
     </LinearLayout>
 
 
-</LinearLayout>
+</RelativeLayout>

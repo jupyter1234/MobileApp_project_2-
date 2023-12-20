@@ -39,6 +39,7 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
+import com.bumptech.glide.Glide
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -75,6 +76,7 @@ class MainFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
+
 
         // loading current date
         val currentDate = SimpleDateFormat("MM/dd").format(Date())
@@ -134,7 +136,7 @@ class MainFragment : Fragment() {
                 // when snap clicked -> dialog
                 val snapdialogBinding = SnapLayoutBinding.inflate(layoutInflater)
 
-                val dialog = Dialog(requireContext().applicationContext)
+                val dialog = Dialog(requireContext())
                 dialog.setContentView(snapdialogBinding.root)
                 dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
                 // Dialog의 크기를 조절합니다. 여기서는 폭과 높이를 설정합니다.
@@ -142,17 +144,23 @@ class MainFragment : Fragment() {
                 val height = resources.getDimensionPixelSize(R.dimen.dialog_height) // 원하는 높이의 크기를 설정하세요
                 dialog.window?.setLayout(width, height)
 
-                val setting=snapdialogBinding.root.findViewById<ImageView>(R.id.settingbutton)
-                setting.setOnClickListener{
-                    //snap수정 창으로 이동
-                    Log.d("ko", "setting button")
-                    dialog.dismiss()
+                for (i in datas) {
+                    if (i.snapId == snap.snapId){
+                        Log.d("ko", "${snap.photoUrl.toUri()}")
+                        Glide.with(snapdialogBinding.root)
+                            .load(snap.photoUrl.toUri())
+                            .error(R.drawable.cancel)
+                            .into(snapdialogBinding.snapimage)
+                        snapdialogBinding.snapText.text = snap.comment
+                    }
                 }
+
                 val trash=snapdialogBinding.root.findViewById<ImageView>(R.id.trashbutton)
                 trash.setOnClickListener {
                     //삭제
-                    Log.d("ko", "setting button")
+                    Log.d("ko", "remove button")
                     db!!.snapDao().delete(snap)
+                    datas.remove(snap)
                     dialog.dismiss()
                 }
                 dialog.show()
@@ -229,25 +237,7 @@ class MainFragment : Fragment() {
 
     //2
     // 카메라 관련 코드
-//    private fun dispatchTakePictureIntent() {
-//        val takePictureIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-//        if (takePictureIntent.resolveActivity(packageManager) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE)
-//        }
-//    }
 
-//    override fun onAcrtivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, data)
-//
-//        if (requestCode == REQUEST_IMAGE_CAPTURE && resultCode == RESULT_OK) {
-//            // Handle the captured image, e.g., save its URL to Room database
-//            val photoUri = data?.data
-//            savePhotoToDatabase(photoUri.toString())
-//
-//            // Return to the previous app
-//            //finish()
-//        }
-//    }
 
 }
 
