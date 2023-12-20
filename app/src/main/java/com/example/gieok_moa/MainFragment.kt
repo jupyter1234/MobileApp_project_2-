@@ -272,6 +272,8 @@ class MainFragment : Fragment() {
             val intent1 = Intent(activity, AddSnapActivity::class.java)
             startActivity(intent1)
 
+            Log.d("ko", "dddd")
+
             // add to datas
             val db = UserDatabase.getInstance(requireContext().applicationContext)
             CoroutineScope(Dispatchers.IO).launch {
