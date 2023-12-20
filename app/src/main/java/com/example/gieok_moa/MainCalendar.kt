@@ -11,6 +11,7 @@ import com.example.gieok_moa.databinding.ActivityMainCalendarBinding
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.util.Calendar
 import java.util.Date
 
 class MainCalendar : AppCompatActivity() {
@@ -40,17 +41,22 @@ class MainCalendar : AppCompatActivity() {
         Log.d("ju","여기 들어옴")
         val db = UserDatabase.getInstance(this.applicationContext)
         //스냅 & 태그 추가
+
+        //11월 더미 만들기
+        val date = Calendar.getInstance().run {
+            add(Calendar.MONTH,-1)
+            time
+        }
         CoroutineScope(Dispatchers.IO).launch {
             val imageUri = "".toUri()
             //db!!.snapDao().deleteAll()
-            val snap1 = Snap(createdDate = Date(),photoUrl = imageUri.toString(),comment = "00")
-            val snap2 = Snap(createdDate = Date(),photoUrl = imageUri.toString(),comment = "01")
-            val snap3 = Snap(createdDate = Date(),photoUrl = imageUri.toString(),comment = "03")
+            val snap1 = Snap(createdDate = date,photoUrl = imageUri.toString(),comment = "111")
+            val snap2 = Snap(createdDate = date,photoUrl = imageUri.toString(),comment = "2222")
+            val snap3 = Snap(createdDate = date,photoUrl = imageUri.toString(),comment = "333")
             db!!.snapDao().insertAll(snap1,snap2,snap3)
-
-            val tag1 = Tag(snap1.snapId, "soso",Color.YELLOW,snap1.snapId)
-            val tag2 = Tag(snap2.snapId, "soso",Color.YELLOW,snap2.snapId)
-            val tag3 = Tag(snap3.snapId, "soso",Color.YELLOW,snap3.snapId)
+            val tag1 = Tag(staus = "soso", color = Color.YELLOW, ownedSnapID = snap1.snapId)
+            val tag2 = Tag(staus = "soso",color = Color.YELLOW, ownedSnapID = snap2.snapId)
+            val tag3 = Tag(staus = "soso",color = Color.YELLOW, ownedSnapID = snap3.snapId)
             db!!.tagDao().insertAll(tag1,tag2,tag3)
         }
 

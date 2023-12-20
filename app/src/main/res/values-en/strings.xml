@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">gieok_moa</string>
+    <string name="stat_title1">You in </string>
+    <string name="stat_title2">How was your month?</string>
+    <string name="mood_score_title">Color Count</string>
+    <string name="tag_stat_title">Most Used Tags</string>
+    <string name="daily_stat_title">TODAY SNAPS</string>
+    <string name="time1">14:00</string>
+    <string name="time2">15:09</string>
+    <string name="time3">15:33</string>
+    <string name="no_tag">정보 없음</string>
+    <string name="some_id">How\'s feeling now?</string>
+    <string name="detail">간단한 한 마디</string>
+
+    <!--달력 요소들-->
+    <string name="mon">M</string>
+    <string name="tue">T</string>
+    <string name="wed">W</string>
+    <string name="thu">T</string>
+    <string name="fri">F</string>
+    <string name="sat">S</string>
+    <string name="sun">S</string>
+    <string name="month"> </string>
+
+</resources>

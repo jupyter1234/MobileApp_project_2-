@@ -103,9 +103,9 @@ class InfiniteFragment : Fragment() {
 
         //각 값 표시
         binding.year.text = currentYear.toString()
-        binding.month.text = currentMonth.toString() + "월"
-        binding.pastmonth.text = pastMonth.toString() + "월"
-        binding.nextmonth.text = nextMonth.toString() + "월"
+        binding.month.text = currentMonth.toString() + getString(R.string.month)
+        binding.pastmonth.text = pastMonth.toString() + getString(R.string.month)
+        binding.nextmonth.text = nextMonth.toString() + getString(R.string.month)
 
         //날짜 표시를 위한 recyclerview 등록
         binding.daysItem.adapter = CalendarAdapter(currentCalendar,colorList)

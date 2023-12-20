@@ -1,6 +1,7 @@
 package com.example.gieok_moa
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -19,7 +20,6 @@ import java.util.Date
 class CalendarAdapter(val calendar: Calendar, val colorList: List<Int>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class CalendarViewHolder(val binding: ListItemCalendarBinding) : RecyclerView.ViewHolder(binding.root)
     var dataList: ArrayList<Int> = arrayListOf()
-
     //moacalendar을 이용해서 날짜 리스트 세팅
     var moaCalendar: MoaCalendar = MoaCalendar(calendar)
     init {
@@ -37,10 +37,11 @@ class CalendarAdapter(val calendar: Calendar, val colorList: List<Int>) : Recycl
     //현재 달 총 날짜 수
     override fun getItemCount(): Int = dataList.size
 
-
     //뷰에 데이터 출력
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         val binding = (holder as CalendarViewHolder).binding
+
+        val context = binding.root.context
         //첫날짜
         val firstDateIndex = moaCalendar.prevTail
         //마지막 날짜
@@ -67,6 +68,28 @@ class CalendarAdapter(val calendar: Calendar, val colorList: List<Int>) : Recycl
         if(position < firstDateIndex || position > lastDateIndex) {
             binding.calendarDate.isVisible = false
             binding.colors.isVisible = false
+        }
+
+        //날짜 클릭하면 스냅 페이지로 이동기능
+        //날짜 넘겨주기 위한 데이터 세팅
+        val thisDate = Calendar.getInstance()
+        val currentMonth = moaCalendar.calendar.get(Calendar.MONTH)
+        val currentYear = moaCalendar.calendar.get(Calendar.YEAR)
+        thisDate.set(Calendar.YEAR, currentYear)
+        thisDate.set(Calendar.MONTH, currentMonth)
+        thisDate.set(Calendar.DATE,dataList[position] )
+        binding.listItemCalendar.setOnClickListener {
+            //숨김해둔 날짜라면 터치 비활성화
+            if (position in firstDateIndex..lastDateIndex) {
+                if (colorList[position - firstDateIndex] != 3 ) {
+                    val intent = Intent(context,MainFragment::class.java)
+                    val test = thisDate.time
+                    Log.d("ju","$test")
+                    //intent.putExtra("clickedDate",thisDate.time)
+                }
+
+            }
+
         }
     }
 }

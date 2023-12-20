@@ -53,7 +53,6 @@ class MoaCalendar(currentCalendar: Calendar) {
 
         nextHead = LOW_OF_CALENDAR * DAYS_OF_WEEK - (prevTail + currentMaxDate)
         makeNextHead()
-
     }
 
     private fun makePrevTail(calendar: Calendar) {
