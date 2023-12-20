@@ -1,12 +1,14 @@
 package com.example.gieok_moa
 
 import android.Manifest
+import android.app.Activity
 import android.app.Activity.RESULT_OK
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -34,12 +36,15 @@ import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
 import android.graphics.Color
+import android.os.Build.VERSION_CODES.S
 import android.provider.MediaStore
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContentProviderCompat
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.toDrawable
+import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import java.io.ByteArrayOutputStream
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -62,6 +67,8 @@ class MainFragment : Fragment() {
     private lateinit var binding: FragmentMainBinding // 바인딩 클래스 인스턴스
 
     private lateinit var datas: MutableList<Snap>
+    lateinit var myadapter : MyAdapter
+    lateinit var snapAddImageUrl : String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -103,14 +110,14 @@ class MainFragment : Fragment() {
             loading.join()
         }
 
-        val snapAddImageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button1"
+        snapAddImageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button1"
         val snapAddButton: Snap = Snap(0.toLong(), Date(), snapAddImageUrl, "")
         datas.add(snapAddButton)
 
         val layoutManager = GridLayoutManager(activity, 2)
         binding.recyclerView.layoutManager = layoutManager
 
-        val adapter = MyAdapter(datas){ snap ->
+        myadapter = MyAdapter(datas){ snap ->
             //Log.d("check", "snap clicked")
             if (snap.photoUrl == snapAddImageUrl){
                 // when snap add button clicked -> popup & move to snap add page
@@ -120,10 +127,7 @@ class MainFragment : Fragment() {
                     setView(selectionDialog.root)
                     selectionDialog.takePic.setOnClickListener {
                         // move to Camera App
-                        //dispatchTakePictureIntent()
-
-                        val intent1=Intent(activity, AddSnapActivity::class.java)
-                        startActivity(intent1)
+                        openCamera()
                     }
                     selectionDialog.fromGal.setOnClickListener {
                         // move to Gallery App
@@ -166,7 +170,7 @@ class MainFragment : Fragment() {
                 dialog.show()
             }
         }
-        binding.recyclerView.adapter = adapter
+        binding.recyclerView.adapter = myadapter
 
         return binding.root
     }
@@ -187,6 +191,20 @@ class MainFragment : Fragment() {
         listener = null
         //deleteTemps()
     }
+
+//    override fun onStart() {
+//        super.onStart()
+//        val db = UserDatabase.getInstance(requireContext().applicationContext)//DB선언
+//
+//        val loading = CoroutineScope(Dispatchers.IO).launch {
+//            datas = db!!.snapDao().getAll().toMutableList()
+//        }
+//        runBlocking {
+//            loading.join()
+//        }//데이터 다 가져올 때 까지 wait
+//
+//        binding.recyclerView.adapter = myadapter
+//    }
 
     companion object {
         lateinit var imageUri: Uri
@@ -237,7 +255,45 @@ class MainFragment : Fragment() {
 
     //2
     // 카메라 관련 코드
+    private fun openCamera() {
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        Log.d("ko", "f1")
+        requestCameraLauncher.launch(intent)
+        Log.d("ko", "f2")
+    }
 
+    private val requestCameraLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+        if (result.resultCode == Activity.RESULT_OK) {
+            val data: Intent? = result.data
+            val imageBitmap: Bitmap = data?.extras?.get("data") as Bitmap
+            val uriImage = bitmapToUriConverter(imageBitmap)
+            imageUri = uriImage
+
+            val intent1 = Intent(activity, AddSnapActivity::class.java)
+            startActivity(intent1)
+
+            // add to datas
+            val db = UserDatabase.getInstance(requireContext().applicationContext)
+            CoroutineScope(Dispatchers.IO).launch {
+                for (snap in db!!.snapDao().getAll()) {
+                    if (snap.photoUrl == uriImage.toString()) {
+                        datas.add(datas.size - 1, snap)
+                    }
+                }
+            }
+        }
+        // Now you have the image bitmap, you can use it as needed (e.g., save to storage, display in ImageView, etc.)
+        else {
+            // The user canceled or encountered an error
+            Log.d("ko", "failed to load image")
+        }
+    }
+    private fun bitmapToUriConverter(bitmap: Bitmap): Uri {
+        val bytes = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(requireContext().applicationContext?.contentResolver, bitmap, "Title", null)
+        return Uri.parse(path)
+    }
 
 }
 
