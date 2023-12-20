@@ -7,6 +7,8 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
@@ -42,6 +44,7 @@ import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.gieok_moa.databinding.AddSnapPageBinding
 import com.example.gieok_moa.databinding.SnapLayoutBinding
+import java.io.ByteArrayOutputStream
 
 private const val ARG_PARAM1 = "param1"
 private const val ARG_PARAM2 = "param2"
@@ -221,10 +224,10 @@ class MainFragment : Fragment() {
         }
     }
 
-
     private fun openGallery() {
         pickImageLauncher.launch("image/*")
     }
+
 
 
 
