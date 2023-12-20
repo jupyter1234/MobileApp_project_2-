@@ -28,7 +28,7 @@ data class Tag (
     var tagID: Long = 0,
     var staus: String = "",
     var color: Color,
-    var ownedSnapID: Long = 0
+    var ownedSnapID: Long = 0  //외래키
 )
 
 //snap : tag = 1 : 1

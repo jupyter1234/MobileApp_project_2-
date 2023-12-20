@@ -41,7 +41,7 @@
             android:layout_marginLeft="31dp"
             android:layout_alignParentTop="true"
             android:layout_marginTop="13dp"
-            android:text="11월"
+            android:text="@string/month"
             android:textAppearance="@style/month"
             android:gravity="top"
             />
@@ -74,7 +74,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="일"
+            android:text="@string/sun"
             android:textAppearance="@style/days"
             android:gravity="top"
             android:layout_marginRight="20dp"
@@ -84,7 +84,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="월"
+            android:text="@string/mon"
             android:textAppearance="@style/days"
             android:gravity="top"
             android:layout_marginRight="20dp"
@@ -94,7 +94,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="화"
+            android:text="@string/tue"
             android:textAppearance="@style/days"
             android:gravity="top"
             android:layout_marginRight="20dp"
@@ -104,7 +104,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="수"
+            android:text="@string/wed"
             android:textAppearance="@style/days"
             android:gravity="top"
             android:layout_marginRight="20dp"
@@ -114,7 +114,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="목"
+            android:text="@string/sat"
             android:textAppearance="@style/days"
             android:gravity="top"
             android:layout_marginRight="20dp"
@@ -124,7 +124,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="금"
+            android:text="@string/fri"
             android:textAppearance="@style/days"
             android:gravity="top"
             android:layout_marginRight="20dp"
@@ -134,7 +134,7 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="토"
+            android:text="@string/sat"
             android:textAppearance="@style/days"
             android:gravity="top"
             />
@@ -143,12 +143,18 @@
     <!--날짜 아이템 들어갈 부분-->
     <GridLayout
         android:layout_width="match_parent"
+        android:layout_marginRight="30dp"
+        android:layout_marginLeft="30dp"
         android:layout_height="0dp"
+        android:rowCount="5"
         android:layout_weight="0.3">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/daysItem"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="fill"/>
     </GridLayout>
 
     <View
@@ -169,7 +175,7 @@
         android:layout_marginLeft="30dp"
         android:layout_alignParentTop="true"
         android:layout_marginTop="3dp"
-        android:text="12월"
+        android:text="@string/month"
         android:textAppearance="@style/pastmonth"
         android:gravity="top"
         />

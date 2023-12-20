@@ -24,6 +24,8 @@ interface snapDao {
     fun insertAll(vararg snap: Snap)
     @Delete
     fun delete(snap: Snap)
+    @Query("DELETE FROM snap_table")
+    fun deleteAll()
 }
 @Dao
 interface tagDao {
