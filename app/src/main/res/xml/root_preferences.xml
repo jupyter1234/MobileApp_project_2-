@@ -1,0 +1,28 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/PreferenceScreenStyle">
+
+    <PreferenceCategory app:title="@string/security"
+        >
+        <SwitchPreferenceCompat
+            app:key="use_password"
+            app:title="@string/use_password"
+            app:defaultValue="false"
+            />
+        <EditTextPreference
+            app:dependency="use_password"
+            app:key="password"
+            app:title="@string/set_password"
+            app:useSimpleSummaryProvider="false"/>
+    </PreferenceCategory>
+    <PreferenceCategory app:title="@string/sync_header">
+
+        <ListPreference
+            app:defaultValue="Korean"
+            app:entries="@array/language"
+            app:entryValues="@array/language_values"
+            app:key="language"
+            app:title="@string/language_title"/>
+    </PreferenceCategory>
+
+</PreferenceScreen>

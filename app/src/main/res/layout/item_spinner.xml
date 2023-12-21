@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:padding="8dp"
+    android:gravity="center"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tag"
+        android:layout_width="43dp"
+        android:layout_height="26dp"
+        android:layout_marginLeft="10dp"
+        android:background="@drawable/red_blur_background"
+        android:text="행복"
+        android:gravity="center"
+        android:fontFamily="@font/po" />
+
+
+
+</LinearLayout>

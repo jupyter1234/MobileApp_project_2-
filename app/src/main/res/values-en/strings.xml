@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">gieok_moa</string>
+    <!-- stat1 -->
+    <string name="daily_stat_title">Today\'s Summary</string>
+    <!-- stat2 -->
+    <string name="no_data">No Data</string>
+    <string name="stat_title1">month of this year</string>
+    <string name="stat_title2">How was your month?</string>
+    <string name="mood_score_title">Color Statistics</string>
+    <string name="tag_stat_title">Most Used Tags</string>
+    <string name="no_tag">No Data</string>
+    <string name="some_id">How are you feeling right now?</string>
+    <string name="detail">A brief comment</string>
+
+
+    <!-- Preference Screen -->
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="security">Security</string>
+    <string name="sync_header">Language Settings</string>
+    <string name="use_password">Use Password Lock</string>
+    <string name="set_password">Set Password</string>
+    <string name="delete_password">Reset Password</string>
+    <string name="language_title">Language</string>
+
+    <!-- Signin Screen -->
+    <string name="pwInputHint">Password</string>
+    <string name="pwSubmitBtn">Submit</string>
+    <string name="wrongPassword">Incorrect password.</string>
+
+    <!--달력 요소들-->
+    <string name="mon">M</string>
+    <string name="tue">T</string>
+    <string name="wed">W</string>
+    <string name="thu">T</string>
+    <string name="fri">F</string>
+    <string name="sat">S</string>
+    <string name="sun">S</string>
+    <string name="month"> </string>
+
+</resources>
