@@ -2,6 +2,7 @@ package com.example.gieok_moa
 
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -16,6 +17,8 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.util.Calendar
 import java.util.Date
+
+
 
 class CalendarAdapter(val calendar: Calendar, val colorList: List<Int>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     class CalendarViewHolder(val binding: ListItemCalendarBinding) : RecyclerView.ViewHolder(binding.root)
@@ -80,15 +83,20 @@ class CalendarAdapter(val calendar: Calendar, val colorList: List<Int>) : Recycl
         thisDate.set(Calendar.DATE,dataList[position] )
         binding.listItemCalendar.setOnClickListener {
             //숨김해둔 날짜라면 터치 비활성화
+            val fragment = MainFragment()
             if (position in firstDateIndex..lastDateIndex) {
                 if (colorList[position - firstDateIndex] != 3 ) {
-                    val intent = Intent(context,MainFragment::class.java)
-                    val test = thisDate.time
+                    //val intent = Intent(context,MainFragment::class.java)
+                    val test = thisDate.timeInMillis
                     Log.d("ju","$test")
-                    //intent.putExtra("clickedDate",thisDate.time)
+                    val bundle = Bundle()
+                    bundle.putLong("requstedDate",test)
+                    fragment.arguments = bundle
+                    fragment.requireFragmentManager().beginTransaction().replace(R.id.mainpage,fragment).commit()
                 }
 
             }
+
 
         }
     }

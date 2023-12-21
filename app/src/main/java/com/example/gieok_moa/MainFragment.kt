@@ -84,7 +84,9 @@ class MainFragment : Fragment() {
     ): View? {
         binding = FragmentMainBinding.inflate(inflater, container, false)
 
-
+        //bundle에서 값 꺼내오기
+        val dataLong = arguments?.getLong("requstedDate")
+        Log.d("ju","$dataLong")
         // loading current date
         val currentDate = SimpleDateFormat("MM/dd").format(Date())
         binding.date.text = currentDate
