@@ -53,7 +53,7 @@ class Stat2Fragment : Fragment() {
     ): View? {
         val binding = FragmentStat2Binding.inflate(inflater,container,false)
 
-        binding.statTitle1.setText(Calendar.getInstance().get(Calendar.MONTH).toString() + getText(R.string.stat_title1))
+        binding.statTitle1.setText((Calendar.getInstance().get(Calendar.MONTH)+1).toString() + getText(R.string.stat_title1))
         color_chart = binding.chart
         tagTxt.add(binding.freq1stTag)
         tagTxt.add(binding.freq2ndTag)
