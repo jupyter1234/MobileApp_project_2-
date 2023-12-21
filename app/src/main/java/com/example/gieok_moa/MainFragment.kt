@@ -90,9 +90,8 @@ class MainFragment : Fragment() {
         binding.date.text = currentDate
 
         binding.settingButton.setOnClickListener {
-            //Log.d("check", "setting button clicked")
-//            val intent: Intent = Intent(this, oooActivity::class.java)
-//            startActivity(intent)
+            val intent: Intent = Intent(activity, SettingsActivity::class.java)
+            startActivity(intent)
         }
         binding.calendarButton.setOnClickListener {
             //Log.d("check", "calendar button clicked")
@@ -179,36 +178,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    private var listener: OnSnapAddedListener? = null
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnSnapAddedListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnAddSnapClickListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-        //deleteTemps()
-    }
-
-//    override fun onStart() {
-//        super.onStart()
-//        val db = UserDatabase.getInstance(requireContext().applicationContext)//DB선언
-//
-//        val loading = CoroutineScope(Dispatchers.IO).launch {
-//            datas = db!!.snapDao().getAll().toMutableList()
-//        }
-//        runBlocking {
-//            loading.join()
-//        }//데이터 다 가져올 때 까지 wait
-//
-//        binding.recyclerView.adapter = myadapter
-//    }
 
     companion object {
         lateinit var imageUri: Uri
@@ -304,8 +274,4 @@ class MainFragment : Fragment() {
         return Uri.parse(path)
     }
 
-}
-
-interface OnSnapAddedListener {
-    fun onSnapAdded()
 }

@@ -63,12 +63,45 @@ class Stat1Fragment : Fragment() {
         endOfDay.add(Calendar.HOUR_OF_DAY, 24)
         datas.removeIf {it.createdDate.time < startOfDay.time.time || it.createdDate.time >= endOfDay.time.time }
 
-        val layoutManager = GridLayoutManager(activity, 2)
+        val layoutManager = GridLayoutManager(activity, 3)
         binding.recyclerView.layoutManager = layoutManager
 
         snapViews = binding.recyclerView
         val adapter = StatAdapter(datas)
         snapViews.adapter = adapter
+
+        fun snapsByColor(){
+            var tags = mutableListOf<Tag>()
+            val loading = CoroutineScope(Dispatchers.IO).launch {
+                tags = db!!.tagDao().getAll().toMutableList()
+            }
+
+            var colorList = mutableListOf<Color>()
+            var coloredSnap = mutableListOf<Snap>()
+            if(binding.color1.isChecked) colorList.add(Color.RED)
+            if(binding.color2.isChecked) colorList.add(Color.YELLOW)
+            if(binding.color3.isChecked) colorList.add(Color.GREEN)
+            runBlocking {
+                loading.join()
+            }
+            for (i in datas){
+                if(tags.any {it.ownedSnapID == i.snapId && (colorList.contains(it.color) || it.color==null)}){
+                    coloredSnap.add(i)
+                }
+            }
+
+            snapViews.adapter = StatAdapter(coloredSnap)
+        }
+
+        binding.color1.setOnClickListener {
+            snapsByColor()
+        }
+        binding.color2.setOnClickListener {
+            snapsByColor()
+        }
+        binding.color3.setOnClickListener {
+            snapsByColor()
+        }
         return binding.root
     }
 
@@ -116,5 +149,10 @@ class Stat1Fragment : Fragment() {
 
         val adapter = StatAdapter(datas)
         snapViews.adapter = adapter
+    }
+
+    override fun onStart() {
+        super.onStart()
+        updateStat1()
     }
 }

@@ -1,26 +1,17 @@
 <resources>
-    <string name="app_name">기억모아</string>
+    <string name="app_name">gieok_moa</string>
+    <!-- stat1 -->
+    <string name="daily_stat_title">오늘의 하루를 모아봤어요</string>
     <!-- stat2 -->
     <string name="no_data">정보 없음</string>
     <string name="stat_title1">11월의 모아님</string>
     <string name="stat_title2">이번 달은 어땠나요?</string>
     <string name="mood_score_title">색상 통계</string>
     <string name="tag_stat_title">가장 자주 쓴 태그</string>
-    <string name="daily_stat_title">오늘의 하루를 모아봤어요</string>
     <string name="no_tag">정보 없음</string>
+
     <string name="some_id">지금 어떤 기분이신가요?</string>
     <string name="detail">간단한 한 마디</string>
-
-    <!--달력 요소들-->
-    <string name="mon">월</string>
-    <string name="tue">화</string>
-    <string name="wed">수</string>
-    <string name="thu">목</string>
-    <string name="fri">금</string>
-    <string name="sat">토</string>
-    <string name="sun">일</string>
-    <string name="month">월</string>
-
 
 
     <!-- Preference Screen -->

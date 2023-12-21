@@ -1,14 +1,16 @@
 package com.example.gieok_moa
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
+import androidx.preference.PreferenceManager
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.gieok_moa.databinding.ActivityMainBinding
 
 
-class MainActivity : AppCompatActivity(), OnSnapAddedListener {
+class MainActivity : AppCompatActivity() {
 
     class MainFragmentPagerAdapter(activity: FragmentActivity) :
         FragmentStateAdapter(activity) {
@@ -20,9 +22,6 @@ class MainActivity : AppCompatActivity(), OnSnapAddedListener {
         override fun getItemCount(): Int = fragments.size
         override fun createFragment(position: Int): Fragment = fragments[position]
 
-        private val fragmentHashMap = HashMap<Int, Fragment?>()
-
-
     }
 
     lateinit var adapter : MainFragmentPagerAdapter
@@ -33,13 +32,12 @@ class MainActivity : AppCompatActivity(), OnSnapAddedListener {
 
         adapter = MainFragmentPagerAdapter(this)
         binding.viewPager.adapter = adapter
-    }
 
-    override fun onSnapAdded() {
-        val stat1Fragment = adapter.fragments[1] as Stat1Fragment
-        stat1Fragment.updateStat1()
-        val stat2Fragment = adapter.fragments[2] as Stat2Fragment
-        stat2Fragment.refresh()
-
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+        val usePassword = sharedPreferences.getBoolean("use_password", false)
+        if(usePassword) {
+            val signinIntent: Intent = Intent(this, SigninActivity::class.java)
+            startActivity(signinIntent)
+        }
     }
 }

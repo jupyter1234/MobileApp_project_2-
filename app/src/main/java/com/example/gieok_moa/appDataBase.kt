@@ -1,10 +1,7 @@
 package com.example.gieok_moa
 
 import android.content.Context
-import android.net.Uri
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.content.ContentProviderCompat.requireContext
-import androidx.core.net.toUri
+import androidx.room.AutoMigration
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -19,7 +16,12 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.Date
 
-@Database(entities = arrayOf(User::class, Snap::class, Tag::class), version = 1)
+//@Database(entities = arrayOf(User::class, Snap::class, Tag::class), version = 1)
+@Database(
+    version = 2,
+    entities = arrayOf(User::class, Snap::class, Tag::class),
+    autoMigrations = [AutoMigration (from = 1, to = 2)],
+    exportSchema = true)
 @TypeConverters(
     value = [
         Converters::class,
@@ -152,6 +154,7 @@ class ImageLoadingExplain {
             val snap1 = Snap(i.toLong(), Date(), imageUri.toString(), "")
             db!!.snapDao().insertAll(snap1)
             }
+
         }
     }
 

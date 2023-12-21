@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".SigninActivity"
+    android:gravity="center"
+    android:orientation="vertical">
+    <EditText
+        android:id="@+id/pwInput"
+        android:layout_width="300dp"
+        android:layout_height="100dp"
+        android:hint="@string/pwInputHint"
+        android:inputType="textPassword"
+        android:gravity="center"
+        android:textSize="50sp"
+        android:fontFamily="@font/po"/>
+    <TextView
+        android:id="@+id/wrongPwTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/wrongPassword"
+        android:textColor="#FF0000"
+        android:fontFamily="@font/po"
+        android:visibility="gone"/>
+    <Button
+        android:id="@+id/pwSubmit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/pwSubmitBtn"
+        android:fontFamily="@font/po"/>
+
+
+</LinearLayout>

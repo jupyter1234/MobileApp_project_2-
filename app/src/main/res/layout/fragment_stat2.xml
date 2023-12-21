@@ -5,85 +5,90 @@
     android:layout_height="match_parent"
     tools:context=".Stat2Fragment"
     android:id="@+id/stat2_fragment">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:background="#FBFBFB"
-        android:gravity="top|center">
-
-        <TextView
-            android:id="@+id/stat_title1"
-            android:layout_width="wrap_content"
-            android:layout_height="66dp"
-            android:layout_marginTop="66dp"
-            android:text="@string/stat_title1"
-            android:textAppearance="@style/text_big"
-            android:layout_gravity="center" />
-        <TextView
-            android:id="@+id/stat_title2"
-            android:layout_width="wrap_content"
-            android:layout_height="50dp"
-            android:layout_marginTop="18dp"
-            android:text="@string/stat_title2"
-            android:textAppearance="@style/text_small"
-            android:layout_gravity="center" />
+        android:layout_height="match_parent">
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#FBFBFB"
+            android:gravity="top|center">
+
+            <TextView
+                android:id="@+id/stat_title1"
+                android:layout_width="wrap_content"
+                android:layout_height="66dp"
+                android:layout_marginTop="66dp"
+                android:text="@string/stat_title1"
+                android:textAppearance="@style/text_big"
+                android:layout_gravity="center" />
+            <TextView
+                android:id="@+id/stat_title2"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_marginTop="18dp"
+                android:text="@string/stat_title2"
+                android:textAppearance="@style/text_small"
+                android:layout_gravity="center" />
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/green_blur"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/yellow_blur"/>
-                <ImageView
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:background="@drawable/red_blur"/>
+                android:orientation="horizontal">
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/green_blur"/>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/yellow_blur"/>
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:background="@drawable/red_blur"/>
+                </LinearLayout>
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/chart"
+                    android:layout_width="200dp"
+                    android:layout_height="150dp"/>
             </LinearLayout>
-            <com.github.mikephil.charting.charts.HorizontalBarChart
-                android:id="@+id/chart"
-                android:layout_width="200dp"
-                android:layout_height="150dp"/>
-        </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/tag_stat_title"
-            android:textAppearance="@style/text_big"
-            android:layout_marginTop="30dp"/>
-        <TextView
-            android:id="@+id/freq_1st_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="1st:"
-            android:textAppearance="@style/text_small"/>
-        <TextView
-            android:id="@+id/freq_2nd_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="2nd:"
-            android:textAppearance="@style/text_small"/>
-        <TextView
-            android:id="@+id/freq_3rd_tag"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="3rd:"
-            android:textAppearance="@style/text_small"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/tag_stat_title"
+                android:textAppearance="@style/text_big"
+                android:layout_marginTop="30dp"/>
+            <TextView
+                android:id="@+id/freq_1st_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1st:"
+                android:textAppearance="@style/text_small"/>
+            <TextView
+                android:id="@+id/freq_2nd_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="2nd:"
+                android:textAppearance="@style/text_small"/>
+            <TextView
+                android:id="@+id/freq_3rd_tag"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="3rd:"
+                android:textAppearance="@style/text_small"/>
+        </LinearLayout>
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/bottombar2"
-            android:layout_marginTop="100dp"/>
-    </LinearLayout>
-
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/bottombar3"
+            android:layout_marginBottom="50dp"/>
+    </RelativeLayout>
 </FrameLayout>
