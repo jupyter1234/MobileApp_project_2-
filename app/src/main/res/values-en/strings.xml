@@ -5,8 +5,8 @@
     <string name="daily_stat_title">Today\'s Summary</string>
     <!-- stat2 -->
     <string name="no_data">No Data</string>
-    <string name="stat_title1">Memo of November</string>
-    <string name="stat_title2">How was this month?</string>
+    <string name="stat_title1">month of this year</string>
+    <string name="stat_title2">How was your month?</string>
     <string name="mood_score_title">Color Statistics</string>
     <string name="tag_stat_title">Most Used Tags</string>
     <string name="no_tag">No Data</string>

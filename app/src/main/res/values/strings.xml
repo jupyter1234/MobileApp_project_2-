@@ -2,7 +2,7 @@
     <string name="app_name">기억모아</string>
     <!-- stat2 -->
     <string name="no_data">정보 없음</string>
-    <string name="stat_title1">11월의 모아님</string>
+    <string name="stat_title1">월의 모아님</string>
     <string name="stat_title2">이번 달은 어땠나요?</string>
     <string name="mood_score_title">색상 통계</string>
     <string name="tag_stat_title">가장 자주 쓴 태그</string>
