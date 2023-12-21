@@ -1,9 +1,12 @@
 package com.example.gieok_moa
 
 import android.content.Context
-import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.Handler
+import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.preference.PreferenceManager
 import com.example.gieok_moa.databinding.ActivitySigninBinding
 
 class SigninActivity : AppCompatActivity() {
@@ -11,31 +14,32 @@ class SigninActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         val binding = ActivitySigninBinding.inflate(layoutInflater)
         setContentView(binding.root)
-/*
-        // 비밀번호 저장
-        val sharedPref = getPreferences(Context.MODE_PRIVATE)
-        val editor = sharedPref.edit()
-        editor.putString("password", password)
-        editor.apply()
-
 // 비밀번호 확인
-        val sharedPref = getSharedPreferences("PasswordPreferences", Context.MODE_PRIVATE)
-        val savedPassword = sharedPref.getString("password", "")
-        if (inputPassword == savedPassword) {
-            // 비밀번호 일치
-        } else {
-            // 비밀번호 불일치
+        val sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this /* Activity context */)
+        val savedPassword = sharedPreferences.getString("password", "")
+        binding.pwSubmit.setOnClickListener {
+            if (binding.pwInput.text.toString().equals(savedPassword)) {
+                finish()
+            } else {
+                binding.wrongPwTextView.visibility = View.VISIBLE
+            }
         }
+    }
 
-        // 앱이 백그라운드로 전환될 때 비밀번호 확인 액티비티 실행
-        override fun onPause() {
-            super.onPause()
-            val intent = Intent(this, PasswordCheckActivity::class.java)
-            startActivity(intent)
+    private var doubleBackToExitPressedOnce = false
+    private val mHandler: Handler = Handler()
+    private val BACK_PRESS_DELAY = 3000L // 3 seconds
+
+
+    override fun onBackPressed() {
+        if (doubleBackToExitPressedOnce) {
+            finishAffinity()
+            return
         }
+        doubleBackToExitPressedOnce = true
+        Toast.makeText(this, "한 번 더 누르시면 앱이 종료됩니다.", Toast.LENGTH_SHORT).show()
 
- */
-
-
+        // Reset the flag after 3 seconds
+        mHandler.postDelayed(Runnable { doubleBackToExitPressedOnce = false }, BACK_PRESS_DELAY)
     }
 }

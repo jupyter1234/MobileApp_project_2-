@@ -1,14 +1,31 @@
 <resources>
     <string name="app_name">gieok_moa</string>
+    <!-- stat1 -->
+    <string name="daily_stat_title">오늘의 하루를 모아봤어요</string>
+    <!-- stat2 -->
+    <string name="no_data">정보 없음</string>
     <string name="stat_title1">11월의 모아님</string>
     <string name="stat_title2">이번 달은 어땠나요?</string>
     <string name="mood_score_title">색상 통계</string>
     <string name="tag_stat_title">가장 자주 쓴 태그</string>
-    <string name="daily_stat_title">오늘의 하루를 모아봤어요</string>
-    <string name="time1">14:00</string>
-    <string name="time2">15:09</string>
-    <string name="time3">15:33</string>
     <string name="no_tag">정보 없음</string>
+
     <string name="some_id">지금 어떤 기분이신가요?</string>
     <string name="detail">간단한 한 마디</string>
+
+
+    <!-- Preference Screen -->
+    <string name="title_activity_settings">SettingsActivity</string>
+    <string name="security">보안</string>
+    <string name="sync_header">언어 설정</string>
+    <string name="use_password">비밀번호 잠금 사용</string>
+    <string name="set_password">비밀번호 설정</string>
+    <string name="delete_password">비밀번호 초기화</string>
+    <string name="language_title">언어</string>
+
+    <!-- Signin Screen -->
+    <string name="pwInputHint">비밀번호</string>
+    <string name="pwSubmitBtn">확인</string>
+    <string name="wrongPassword">비밀번호가 틀렸습니다.</string>
+
 </resources>

@@ -1,5 +1,6 @@
 package com.example.gieok_moa
 
+import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.net.toUri
@@ -19,7 +20,7 @@ class StatAdapter(val datas: List<Snap>): RecyclerView.Adapter<RecyclerView.View
 
         binding.snapTime.text = SimpleDateFormat("hh:mm").format(item.createdDate)
         Glide.with(binding.root)
-            .load(item.photoUrl.toUri())
+            .load(Uri.parse(item.photoUrl))
             .into(binding.snapImage)//glide라이브러리로 표시
     }
     override fun getItemCount(): Int = datas.size

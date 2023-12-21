@@ -118,6 +118,9 @@ class Stat2Fragment : Fragment() {
                 tagCountMap[i.staus] = 1
             }
         }
+        if(tagCountMap.containsKey("")) {
+            tagCountMap.remove("")
+        }
         val result: List<MutableMap.MutableEntry<String, Int>>
         if(tagCountMap.size<count) {
             result = tagCountMap.entries.sortedByDescending { it.value }.take(count)
@@ -222,15 +225,15 @@ class Stat2Fragment : Fragment() {
         if(topTags.size>=1)
             tagTxt[0].setText("1st : ${topTags[0].key} (${topTags[0].value})")
         else
-            tagTxt[0].setText("1st : 정보 없음")
+            tagTxt[0].setText("1st : " + getText(R.string.no_data))
         if(topTags.size>=2)
             tagTxt[1].setText("2nd : ${topTags[1].key} (${topTags[1].value})")
         else
-            tagTxt[1].setText("2nd : 정보 없음")
+            tagTxt[1].setText("2nd : " + getText(R.string.no_data))
         if(topTags.size>=3)
             tagTxt[2].setText("3rd : ${topTags[2].key} (${topTags[2].value})")
         else
-            tagTxt[2].setText("3rd : 정보 없음")
+            tagTxt[2].setText("3rd : " + getText(R.string.no_data))
     }
 
     fun getTagsByDate(start: Calendar,end: Calendar):List<Tag>{
@@ -263,5 +266,10 @@ class Stat2Fragment : Fragment() {
         val end = (start.clone() as Calendar)
         end.add(Calendar.MONTH, 1)
         return getTagsByDate(start, end)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        refresh()
     }
 }

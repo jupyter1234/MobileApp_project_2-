@@ -74,6 +74,5 @@ dependencies {
 
     implementation("com.github.bumptech.glide:glide:4.16.0")
     annotationProcessor("com.github.bumptech.glide:compiler:4.16.0")
-
-    kapt("androidx.room:room-compiler:$room_version")
+    implementation("androidx.preference:preference-ktx:1.2.1")
 }

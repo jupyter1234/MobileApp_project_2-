@@ -70,17 +70,37 @@ class Stat1Fragment : Fragment() {
         val adapter = StatAdapter(datas)
         snapViews.adapter = adapter
 
+        fun snapsByColor(){
+            var tags = mutableListOf<Tag>()
+            val loading = CoroutineScope(Dispatchers.IO).launch {
+                tags = db!!.tagDao().getAll().toMutableList()
+            }
+
+            var colorList = mutableListOf<Color>()
+            var coloredSnap = mutableListOf<Snap>()
+            if(binding.color1.isChecked) colorList.add(Color.RED)
+            if(binding.color2.isChecked) colorList.add(Color.YELLOW)
+            if(binding.color3.isChecked) colorList.add(Color.GREEN)
+            runBlocking {
+                loading.join()
+            }
+            for (i in datas){
+                if(tags.any {it.ownedSnapID == i.snapId && (colorList.contains(it.color) || it.color==null)}){
+                    coloredSnap.add(i)
+                }
+            }
+
+            snapViews.adapter = StatAdapter(coloredSnap)
+        }
+
         binding.color1.setOnClickListener {
-            val snaplist = snapsByColor(Color.RED)
-            snapViews.adapter = StatAdapter(snaplist)
+            snapsByColor()
         }
         binding.color2.setOnClickListener {
-            val snaplist = snapsByColor(Color.YELLOW)
-            snapViews.adapter = StatAdapter(snaplist)
+            snapsByColor()
         }
         binding.color3.setOnClickListener {
-            val snaplist = snapsByColor(Color.GREEN)
-            snapViews.adapter = StatAdapter(snaplist)
+            snapsByColor()
         }
         return binding.root
     }
@@ -131,22 +151,8 @@ class Stat1Fragment : Fragment() {
         snapViews.adapter = adapter
     }
 
-    fun snapsByColor(color:Color):MutableList<Snap>{
-        val db = UserDatabase.getInstance(requireContext().applicationContext)//DB선언
-        var datasByColor : MutableList<Snap> = mutableListOf()
-        var tags : MutableList<Tag> = mutableListOf()
-        val loading = CoroutineScope(Dispatchers.IO).launch {
-            tags = db!!.tagDao().getAll().toMutableList()
-        }
-        runBlocking {
-            loading.join()
-        }//데이터 다 가져올 때 까지 wait
-        for (i in datas){
-            if(tags.any { it.ownedSnapID == i.snapId && it.color==color}){
-                datasByColor.add(i)
-            }
-        }
-
-        return datasByColor
+    override fun onStart() {
+        super.onStart()
+        updateStat1()
     }
 }

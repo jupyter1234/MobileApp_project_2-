@@ -87,9 +87,8 @@ class MainFragment : Fragment() {
         binding.date.text = currentDate
 
         binding.settingButton.setOnClickListener {
-            //Log.d("check", "setting button clicked")
-//            val intent: Intent = Intent(this, oooActivity::class.java)
-//            startActivity(intent)
+            val intent: Intent = Intent(activity, SettingsActivity::class.java)
+            startActivity(intent)
         }
         binding.calendarButton.setOnClickListener {
             //Log.d("check", "calendar button clicked")
@@ -152,9 +151,8 @@ class MainFragment : Fragment() {
 
                 val setting=snapdialogBinding.root.findViewById<ImageView>(R.id.settingbutton)
                 setting.setOnClickListener{
-                    //snap수정 창으로 이동
-                    Log.d("ko", "setting button")
-                    dialog.dismiss()
+                    val intent: Intent = Intent(activity, SettingsActivity::class.java)
+                    startActivity(intent)
                 }
                 val trash=snapdialogBinding.root.findViewById<ImageView>(R.id.trashbutton)
                 trash.setOnClickListener {
@@ -170,21 +168,7 @@ class MainFragment : Fragment() {
         return binding.root
     }
 
-    private var listener: OnSnapChangeListener? = null
 
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        if (context is OnSnapChangeListener) {
-            listener = context
-        } else {
-            throw RuntimeException(context.toString() + " must implement OnAddSnapClickListener")
-        }
-    }
-
-    override fun onDetach() {
-        super.onDetach()
-        listener = null
-    }
 
     companion object {
         lateinit var imageUri: Uri
@@ -217,11 +201,7 @@ class MainFragment : Fragment() {
             Log.d("park","Main ${uri.toString()}")
 
             val intent1=Intent(activity, AddSnapActivity::class.java)
-            fragmentUpdater.launch(intent1)
         }
-    }
-    val fragmentUpdater = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){ result ->
-        listener?.onSnapChange()
     }
 
 
@@ -280,7 +260,4 @@ class MainFragment : Fragment() {
             }
         }
     }
-}
-interface OnSnapChangeListener {
-    fun onSnapChange()
 }

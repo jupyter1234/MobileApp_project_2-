@@ -23,30 +23,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:layout_marginTop="40dp">
-            <RelativeLayout
+            <CheckBox
                 android:id="@+id/color1"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="0dp"
-                android:layout_alignParentTop="true"
+                android:layout_marginStart="0dp"
                 android:background="@drawable/red_blur"
+                android:button="@null"
                 />
-            <RelativeLayout
+            <CheckBox
                 android:id="@+id/color2"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="32dp"
-                android:layout_alignParentTop="true"
+                android:layout_marginStart="32dp"
+                android:button="@null"
                 android:background="@drawable/yellow_blur"/>
-            <RelativeLayout
+            <CheckBox
                 android:id="@+id/color3"
                 android:layout_width="48dp"
                 android:layout_height="48dp"
-                android:layout_alignParentLeft="true"
-                android:layout_marginLeft="32dp"
-                android:layout_alignParentTop="true"
+                android:layout_marginStart="32dp"
+                android:button="@null"
                 android:background="@drawable/green_blur"/>
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
@@ -54,10 +51,5 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </androidx.recyclerview.widget.RecyclerView>
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/bottombar2"
-            android:layout_marginTop="300dp"/>
     </LinearLayout>
 </FrameLayout>
