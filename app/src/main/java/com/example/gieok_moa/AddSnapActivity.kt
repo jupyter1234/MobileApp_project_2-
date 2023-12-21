@@ -107,6 +107,7 @@ class AddSnapActivity : AppCompatActivity() {
             var imageUri: Uri
             val loading = CoroutineScope(Dispatchers.IO).launch {
                 snapdatas = db!!.snapDao().getAll()
+                Tagdatas = db!!.tagDao().getAll()
             }
             runBlocking {
                 loading.join()
@@ -118,7 +119,7 @@ class AddSnapActivity : AppCompatActivity() {
 
             var snapid: Long = 1
             if (snapdatas != null && snapdatas.isNotEmpty()) {
-                snapid = Tagdatas.last().tagID + 1
+                snapid = snapdatas.last().snapId + 1
             }
             cropLayout.crop()
             cropLayout.addOnCropListener(object : OnCropListener {
@@ -131,20 +132,24 @@ class AddSnapActivity : AppCompatActivity() {
                     //database에 저장후 mainpage로 돌아감
                     Log.d("park","success image")
 
-                    CoroutineScope(Dispatchers.IO).launch{
-                        val snap1 = Snap(snapid.toLong(), date, imageUri.toString(), usercomment)
-                        db!!.snapDao().insertAll(snap1)
-                    }
-                    Log.d("park","successdb")
-                    //고유 SANPID를 가진 TAG로 저장
-                    val newSanpandTagpair=selectedTag
-                    newSanpandTagpair.ownedSnapID=snapid.toLong()
 
+                    //고유 SANPID를 가진 TAG로 저장
+                    var tagid: Long = 1
+                    if (Tagdatas != null && Tagdatas.isNotEmpty()) {
+                        tagid = Tagdatas.last().tagID + 1
+                    }
+                    Log.d("park","${tagid}")
+                    val newSanpandTagpair = Tag(tagid.toLong(), selectedTag.staus, selectedTag.color, snapid.toLong())
+
+
+                    val snap1 = Snap(snapid.toLong(), date, imageUri.toString(), usercomment)
+
+                    //snap, tag를 db에 저장
                     CoroutineScope(Dispatchers.IO).launch{
                         db!!.tagDao().insertAll(newSanpandTagpair)
+                        db!!.snapDao().insertAll(snap1)
                     }
 
-                    Log.d("park",usercomment)
                 }
 
                 override fun onFailure(e: Exception) {
@@ -190,6 +195,7 @@ class AddSnapActivity : AppCompatActivity() {
                 saveTag=Tag(tagid,editTextContent,tagColor,zero.toLong())
                 CoroutineScope(Dispatchers.IO).launch {
                     try {
+                        Log.d("park", "${zero.toLong()}")
                         db!!.tagDao().insertAll(saveTag)
                         tagList.add(saveTag)
                     } catch (e: Exception) {
@@ -211,9 +217,5 @@ class AddSnapActivity : AppCompatActivity() {
         val path = MediaStore.Images.Media.insertImage(this?.contentResolver, bitmap, "Title", null)
         return Uri.parse(path)
     }
-
-
-
-
 
 }
