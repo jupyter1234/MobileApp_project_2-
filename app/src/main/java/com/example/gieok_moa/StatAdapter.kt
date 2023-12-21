@@ -18,7 +18,7 @@ class StatAdapter(val datas: List<Snap>): RecyclerView.Adapter<RecyclerView.View
         val binding = (holder as MyViewHolder).binding
         val item = datas[position]
 
-        binding.snapTime.text = SimpleDateFormat("hh:mm").format(item.createdDate)
+        binding.snapTime.text = SimpleDateFormat("HH:mm").format(item.createdDate)
         Glide.with(binding.root)
             .load(Uri.parse(item.photoUrl))
             .into(binding.snapImage)//glide라이브러리로 표시
