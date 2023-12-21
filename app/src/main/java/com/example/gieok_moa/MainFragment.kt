@@ -100,9 +100,6 @@ class MainFragment : Fragment() {
             startActivity(intent)
         }
 
-        // 달력에서 가져온 날짜의 스냅 보여주기. 가져온 날짜랑 맞는 거만 db에서 불러서 datas에 넘겨줘야함.
-        // 오늘 날짜랑 다르다면, snap add button은 datas에 추가하면 안 됨.
-
         // db 불러오기
         val db = UserDatabase.getInstance(requireContext().applicationContext)
         datas = mutableListOf()
@@ -113,7 +110,7 @@ class MainFragment : Fragment() {
             loading.join()
         }
 
-        snapAddImageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button"
+        snapAddImageUrl = "android.resource://com.example.gieok_moa/drawable/snap_add_button1"
         val snapAddButton: Snap = Snap(0.toLong(), Date(), snapAddImageUrl, "")
         datas.add(snapAddButton)
 
@@ -168,7 +165,6 @@ class MainFragment : Fragment() {
                     Log.d("ko", "remove button")
                     db!!.snapDao().delete(snap)
                     datas.remove(snap)
-                    myadapter.notifyDataSetChanged()
                     dialog.dismiss()
                 }
                 dialog.show()
@@ -212,7 +208,6 @@ class MainFragment : Fragment() {
 
     companion object {
         lateinit var imageUri: Uri
-        //lateinit var requestedDate: Date
         /**
          * Use this factory method to create a new instance of
          * this fragment using the provided parameters.
@@ -248,9 +243,6 @@ class MainFragment : Fragment() {
                 for (snap in db!!.snapDao().getAll()){
                     if (snap.photoUrl == uri.toString()){
                         datas.add(datas.size-1, snap)
-                        Log.d("ko", "Before notifyDataSetChanged(): ${datas.size}")
-                        myadapter.notifyDataSetChanged()
-                        Log.d("ko", "Before notifyDataSetChanged(): ${datas.size}")
                         }
                     }
                 }
@@ -280,13 +272,14 @@ class MainFragment : Fragment() {
             val intent1 = Intent(activity, AddSnapActivity::class.java)
             startActivity(intent1)
 
+            Log.d("ko", "dddd")
+
             // add to datas
             val db = UserDatabase.getInstance(requireContext().applicationContext)
             CoroutineScope(Dispatchers.IO).launch {
                 for (snap in db!!.snapDao().getAll()) {
                     if (snap.photoUrl == uriImage.toString()) {
                         datas.add(datas.size - 1, snap)
-                        myadapter.notifyDataSetChanged()
                     }
                 }
             }

@@ -38,7 +38,7 @@ class AddSnapActivity : AppCompatActivity() {
 
     val zero:Int=0
 
-// juseok
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
