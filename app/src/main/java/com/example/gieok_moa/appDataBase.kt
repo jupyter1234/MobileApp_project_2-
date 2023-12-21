@@ -16,12 +16,13 @@ import java.io.IOException
 import java.io.OutputStream
 import java.util.Date
 
-//@Database(entities = arrayOf(User::class, Snap::class, Tag::class), version = 1)
+//@Database(entities = arrayOf(User::class, Snap::class, Tag::class), version = 1, exportSchema = true)
 @Database(
     version = 2,
     entities = arrayOf(User::class, Snap::class, Tag::class),
     autoMigrations = [AutoMigration (from = 1, to = 2)],
-    exportSchema = true)
+    )
+
 @TypeConverters(
     value = [
         Converters::class,
@@ -42,7 +43,7 @@ abstract class UserDatabase: RoomDatabase() {
                         context.applicationContext,
                         UserDatabase::class.java,
                         "user-database"
-                    ).allowMainThreadQueries()
+                    ).fallbackToDestructiveMigration()
                         .build()
                 }
             }

@@ -24,8 +24,6 @@ interface userDao {
 interface snapDao {
     @Query("SELECT * FROM snap_table")
     fun getAll() : List<Snap>
-    @Query("SELECT * FROM snap_table where createdDate = :createddate")
-    fun getbyDate(createddate:Long) : List<Snap>
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAll(vararg snap: Snap)
     @Delete
