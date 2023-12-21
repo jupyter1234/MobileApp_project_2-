@@ -36,7 +36,21 @@ class MainCalendar : AppCompatActivity() {
 
         //makeDummy()
     }
+        override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            android.R.id.home -> {
+                // 뒤로가기 버튼 클릭 시 동작 추가
+                onBackPressed()
+                return true
+            }
+            else -> return super.onOptionsItemSelected(item)
+        }
+    }
 
+    override fun onBackPressed() {
+        // 뒤로가기 버튼 눌렀을 때의 동작 추가
+        super.onBackPressed()
+    }
     fun makeDummy(){
         Log.d("ju","여기 들어옴")
         val db = UserDatabase.getInstance(this.applicationContext)
