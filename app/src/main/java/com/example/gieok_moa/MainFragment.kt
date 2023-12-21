@@ -153,6 +153,7 @@ class MainFragment : Fragment() {
                 setting.setOnClickListener{
                     val intent: Intent = Intent(activity, SettingsActivity::class.java)
                     startActivity(intent)
+                    dialog.dismiss()
                 }
                 val trash=snapdialogBinding.root.findViewById<ImageView>(R.id.trashbutton)
                 trash.setOnClickListener {

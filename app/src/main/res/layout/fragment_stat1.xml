@@ -5,16 +5,16 @@
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".Stat1Fragment">
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:gravity="top|center"
         android:orientation="vertical">
         <TextView
             android:id="@+id/daily_stat_title"
             android:layout_width="wrap_content"
             android:layout_height="46dp"
             android:layout_marginTop="66dp"
+            android:layout_centerHorizontal="true"
             android:text="@string/daily_stat_title"
             android:textAppearance="@style/text_small"/>
 
@@ -22,7 +22,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
-            android:layout_marginTop="40dp">
+            android:layout_marginTop="152dp"
+            android:layout_centerHorizontal="true">
             <CheckBox
                 android:id="@+id/color1"
                 android:layout_width="48dp"
@@ -48,8 +49,16 @@
         </LinearLayout>
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView"
+            android:layout_marginTop="250dp"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
         </androidx.recyclerview.widget.RecyclerView>
-    </LinearLayout>
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_alignParentBottom="true"
+            android:src="@drawable/bottombar2"
+            android:layout_marginBottom="50dp"/>
+    </RelativeLayout>
 </FrameLayout>
